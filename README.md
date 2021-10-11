@@ -1,7 +1,7 @@
 # Commed Backend
 
 ## Database Model
-![Database UML diagram][./doc/img/db.png]
+![Database UML diagram](./doc/img/db.png)
 
 ## Structure
 
