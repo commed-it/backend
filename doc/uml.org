@@ -1,0 +1,54 @@
+#+TITLE: Uml
+
+
+#+begin_src plantuml :file img/db.png :dir .
+!theme plain
+
+class Product <<persistent>> {
+    + id : Int
+    ..
+    + owner : User
+    + tags : OriIssue
+    + description : Text
+    + photo : Image maybe more than one
+    + latitude : Double
+    + longitude : Double
+}
+
+class Enterprise <<persistent>> {
+    + owner
+    ..
+    + NIF
+    + name : Chars
+    + contactInfo : Chars
+    + description : RichText
+}
+
+class User <<persistent>> {
+    + email
+    ..
+}
+
+
+class FormalOffer <<persistent>> {
+    + encounterId : Int
+    + version : Int
+    ..
+    + contract : RichText
+}
+
+class SignedPDF <<persistent>> {
+    + formalOfferId : Int
+    ..
+    + file : FilePDF
+}
+
+User "1" -- "0..*" Product : owns >
+User "1" -- "1" Enterprise : owns >
+Product "1" -- "0..*" Encounter : startedChat >
+FormalOffer "0..*" -- "1" Encounter : startedFormalOffer <
+SignedPDF "0..1" -- "1" FormalOffer : createdPDF <
+#+end_src
+
+#+RESULTS:
+[[file:img/db.png]]
