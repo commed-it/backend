@@ -1,0 +1,77 @@
+#+TITLE: Viability Strategy
+* PROJ Geet a viability strategy
+** Who
++ Geographically
+  - Catalonia, LLeida is to small to test the subject, but maybe be could start only with BCN Lleida-TRG
+  - LLEIDA-TRG seems good to us. Diversity seems to be better there.
++ Multi Single sector: multisector. No discuss.
++ Size of organizations: we will targe them all. Small medium to start. 2nd 3rd year we will focus on the big ones.
+  - Diferent plans to target them.
+  - Subscription based on the enterprise directly.
++ Interest
+  - Quim :: Publishers may want both ends of the stick.
+  - Sergi :: Getting a small ecosystem.
+** How Many
++ Periods
+  - like we said before, we should target small and medium first, but by the second year and incrementally focus on big companies.
++ Per sector
+  - First sectors
+    + Food Industry
+    + Restauration
+    + Agriculture :: pick food
+    + Organitzations for seasonal work to get temporary contracts (?)
+  - Second sector (you may have already a prefered source)
+    + Security
+    + Cleaning Services
+    + Logistic
++ Per customer type
+  - Focus on workable ecosystems
+** Strategy
++ Marketing campaings
+  - Nico & Quim :: LINKEDIN BOOOOIS, social media
++ Ads :: Wix seems to have paid off
+  - They are not expensive, maybe in Linkedin we could get money.
++ Door to door / Demos
+  - Sergi :: Seems a good way to get the first clients, even if we have to make a give away
+  - Quim :: Slush and other congress.
++ Word-to-mouth
+  - Friendship partnerships, as in gyms.
+** PROJ MONEY-GRABBERS BOOOOOOOOOOYS
+*** Mixed strategy
+- If it is free user and you want only to search one service/product, it has limited features, such as: limited search, limited capacity of companies to chat and connect and also, it has to pay a fixed contract.
+- If it is a subscribed user, it could pay:
+  - A % fee depending a contract (legal issues) if you are a big company?
+  - Fixed payment with less %?
+  - Limited amount of contracts of that price?
+  - Not payment if you are a small company?
+- Support a free trial with limited features but not as free user functionalities?
+*** Upfront fee
+- Free trial.
+  + First commercial agreement is free.
+  + Comision on the agreement.
+- Freemium :: We may base it on freemium.
+  + Chating - You can only have N chats
+- Free :: Search for business
+  + Searcher
+- Premium :: Starts the chat
+  + Publishing
+  + Sign the contract
+*** TODO Subscription model
++ Weekly
++ Monthly
++ Annualy
+  - Sergi :: proposed to break the prices between small, medium and large enterprises. Maybe make a sale at some point to get more users
+  - Quim :: proposed ...
+  - Ori :: Same as Sergi.
+  - Emina :: ..
+  - Jas ::  ..
+  - Nico :: ..
+*** TODO Advertising
+*** TODO In-App purchases
++ The entities must pay a % of the contract / formal offer they have agreed
++
+** TODO Three scenarios
++ Pessimistic
++ Normal
++ Optimistic
+** TODO That variables that played for us
