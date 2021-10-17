@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  web:
+    container_name: commed-backend
+    build: .
+    env_file:
+      - .env
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+    restart: always
+  database:
+    build: ./database
+    container_name: commed-database
+    env_file:
+      - .env
+    volumes:
+      # /host/path:/container/path
+      - ./database/data:/var/lib/postgresql/data
+volumes:
+  database:
