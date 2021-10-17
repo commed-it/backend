@@ -6,7 +6,7 @@ services:
     build: .
     env_file:
       - .env
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh ./docker-web-script.sh
     volumes:
       - .:/app
     ports:
@@ -14,13 +14,15 @@ services:
     depends_on:
       - database
     restart: always
+    stdin_open: true
+    tty: true
   database:
-    build: ./database
+    image: postgres:14-alpine
     container_name: commed-database
     env_file:
       - .env
     volumes:
       # /host/path:/container/path
-      - ./database/data:/var/lib/postgresql/data
+      - ../database/data:/var/lib/postgresql/data
 volumes:
   database:
