@@ -32,3 +32,24 @@ The super user will have admin privileges.
 ```
 docker-compose exec web python manage.py createsuperuser
 ```
+
+## Testing
+
+``` bash
+docker-compose exec web python3 manage.py test
+```
+
+## Development tips
+Copy the .env file and execute on a WSL or Linux terminal:
+
+``` bash
+cp .env-sample .env
+source venv/bin/activate
+set -o allexport; source .env; set +o allexport
+```
+
+The first line is to copy the sample, which is already configured for development options. The second is to activate the venv.
+
+Finally, the third will export all the environment variables so that you can use `python3 manage.py <<comands>>`.
+
+But you have to keep in mind that it tests with postgresql should also be done, and to keep your python version up to (or at least close to) python3.10, as the server is executed in this version.
