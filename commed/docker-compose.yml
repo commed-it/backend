@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8000:8000
+      - ${OPEN_PORT}:${DJANGO_PORT}
     depends_on:
       - database
     restart: always
