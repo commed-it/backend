@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
+    # Our apps
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
