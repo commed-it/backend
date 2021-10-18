@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.http import HttpResponse
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
@@ -25,10 +25,12 @@ schema_view = get_schema_view(title=API_TITLE)
 
 
 urlpatterns = [
+    path('', lambda request: HttpResponse("Hello world!")),
     path("admin/", admin.site.urls),
     path("docs/", include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
     path("user/", include("user.urls")),
     path("schema/", schema_view),
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/registration/", include("dj_rest_auth.registration.urls")),
+    path("enterprise/", include("enterprise.urls"))
 ]
