@@ -29,7 +29,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install Dependecies
         run: |
-          apt-get install libpq-dev
+          apt-get install --yes libpq-dev
           python -m pip install --upgrade pip
           python -m pip install -r commed/requirements.txt
 
