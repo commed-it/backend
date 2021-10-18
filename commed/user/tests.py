@@ -1,8 +1,17 @@
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
+from io import StringIO
+from django.core.management import call_command
+from django.test import TestCase
 
-# Create your tests here.
-#
+class InitadminTest(TestCase):
+    def test_command_output(self):
+        out = StringIO()
+        call_command('initadmin', stdout=out)
+        self.assertIn('successfully', out.getvalue())
+        call_command('initadmin', stdout=out)
+        self.assertIn('already', out.getvalue())
+
 class ApiDeleteExamWithGrade(APITestCase):
     def setUp(self):
         self.user = User.objects.create(

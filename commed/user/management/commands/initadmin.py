@@ -18,3 +18,6 @@ class Command(BaseCommand):
             admin.is_active = True
             admin.is_admin = True
             admin.save()
+            self.stdout.write('Admin successfully created!')
+        else:
+            self.stdout.write('Admin was already in the database!')
