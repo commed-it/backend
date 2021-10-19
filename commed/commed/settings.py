@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth.registration",
     # Our apps
-    'user.apps.UserConfig'
+    'user.apps.UserConfig',
+    'enterprise.apps.EnterpriseConfig',
 ]
 
 MIDDLEWARE = [
