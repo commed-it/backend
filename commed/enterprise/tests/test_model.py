@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from ..models import Enterprise
+from enterprise.models import Enterprise
 
 
 class GradesTestCase(TestCase):
