@@ -1,7 +1,7 @@
 from rest_framework.routers import SimpleRouter
-from .views import EnterpriseViewSet
+from .views import ProductViewSet
 
 router = SimpleRouter()
-router.register("", EnterpriseViewSet)
+router.register("", ProductViewSet)
 
 urlpatterns = router.urls

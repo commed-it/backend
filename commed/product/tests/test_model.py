@@ -3,10 +3,10 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from enterprise.models import Enterprise
+from product.models import Product
 
 
-class GradesTestCase(TestCase):
+class ProductTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -33,23 +33,21 @@ class GradesTestCase(TestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
-        Enterprise.objects.create(
-            owner=user_1,
-            NIF="12345678X",
-            name="Restaurant Paco",
-            contactInfo="paco@paco.com",
-            description="<strong>This is a strong statement, lady</strong>",
-        )
-        Enterprise.objects.create(
+        p = Product.objects.create(
             owner=user_2,
-            NIF="21345678X",
-            name="Restaurant PaNco",
-            contactInfo="paco@paco.com",
-            description="<strong>This is a strong statement, lady</strong>",
+            description="gertgtg3",
+            latitude=0.0,
+            longitude=0.0
         )
-
+        p.tag.add()
+        Product.objects.create(
+            owner=user_1,
+            description="ekjpoeasjdmpa",
+            latitude=0.0,
+            longitude=0.0
+        )
 
     def test_content(self):
-        enterprise = Enterprise.objects.get(id=1)
-        self.assertEqual(1, enterprise.owner.pk)
-        self.assertEqual('12345678X', enterprise.NIF)
+        product = Product.objects.get(id=1)
+        self.assertEqual(2, product.owner.pk)
+        self.assertEqual("gertgtg3", product.description)
