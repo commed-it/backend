@@ -1,11 +1,12 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from enterprise.models import Enterprise
+from offer.models import Encounter
+from product.models import Product
 import datetime
 
 # Create your tests here.
-BASE_URL: str = "/enterprise/"
+BASE_URL: str = "/offer/"
 
 
 class ApiCRUDWorks(APITestCase):
@@ -37,65 +38,81 @@ class ApiCRUDWorks(APITestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
-        Enterprise.objects.create(
-            owner=user_1,
-            NIF="12345678X",
-            name="Restaurant Paco",
-            contactInfo="paco@paco.com",
-            description="<strong>This is a strong statement, lady</strong>",
-        )
-        Enterprise.objects.create(
+
+        product1 = Product.objects.create(
             owner=user_2,
-            NIF="21345678X",
-            name="Restaurant PaNco",
-            contactInfo="paco@paco.com",
-            description="<strong>This is a strong statement, lady</strong>",
+            description="gertgtg3",
+            latitude=0.0,
+            longitude=0.0
+        )
+        product2 = Product.objects.create(
+            owner=user_1,
+            description="ekjpoeasjdmpa",
+            latitude=0.0,
+            longitude=0.0
+        )
+        client1 = User.objects.create(
+            username="emina",
+            password="complexpass",
+            email="furnace@gmail.com",
+            first_name="Linguini",
+            last_name="Kitchen",
+        )
+        client2 = User.objects.create(
+            username="nico",
+            password="complexpass",
+            email="quimpm@gmail.com",
+            first_name="Macarroni",
+            last_name="Diabola",
+        )
+        e = Encounter.objects.create(
+            client=client1,
+            product=product1
+        )
+        Encounter.objects.create(
+            client=client2,
+            product=product2
         )
 
-    def test_list_enterprise(self):
+    def test_list_encounter(self):
         """
         Test the list type in CRUD.
         """
         response = self.client.get(BASE_URL)
         self.assertEqual(200, response.status_code)
 
-    def test_get_enterprise(self):
+    def test_get_encounter(self):
         """
         Test the get type in CRUD.
         """
         response = self.client.get(BASE_URL + "1/")
         self.assertEqual(200, response.status_code)
 
-    def test_create_enterprise(self):
+    def test_create_encounter(self):
         """
-        Test create enterprise
+        Test create encounter
         """
         response = self.client.post(
             BASE_URL,
             {
-                "owner": 2,
-                "NIF": "987654321X",
-                "name": "Another Enterprise",
-                "contactInfo": "SO CALL ME BABY",
-                "description": "<p>What do you mean by that?</p>",
+                "client": 1,
+                "product": 1
+
             },
         )
         self.assertEqual(201, response.status_code)
 
-    def test_update_enterprise(self):
+    def test_update_encounter(self):
         response = self.client.put(
             BASE_URL + "1/",
             {
-                "owner": 1,
-                "NIF": "987654321X",
-                "name": "Another Enterprise",
-                "contactInfo": "SO CALL ME BABY",
-                "description": "<p>What do you mean by that?</p>",
+                 "client": 1,
+                "product": 1
             },
         )
         self.assertEqual(200, response.status_code)
 
-    def test_patch_enterprise(self):
+    def test_patch_encounter(self):
         response = self.client.patch(
             BASE_URL + "1/",
             {
@@ -104,6 +121,6 @@ class ApiCRUDWorks(APITestCase):
         )
         self.assertEqual(200, response.status_code)
 
-    def test_delete_enterprise(self):
+    def test_delete_encounter(self):
         response = self.client.delete(BASE_URL + '1/')
         self.assertEqual(204, response.status_code)

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from ..models import Product, Tag
+from product.models import Product, Tag
 import datetime
 
 # Create your tests here.
