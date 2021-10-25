@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Enterprise(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="owner")
-    NIF = models.CharField(max_length=30)
+    NIF = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=128)
     contactInfo = models.CharField(max_length=256)
     description = models.TextField(help_text='Description about the entity. It can be provided HTML')
