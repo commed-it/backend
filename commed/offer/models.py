@@ -6,6 +6,9 @@ class Encounter(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f'Encounter(client={self.client}, product={self.product})'
+
 class FormalOffer(models.Model):
     encounterId = models.ForeignKey(Encounter, on_delete=models.CASCADE, null=False, related_name="encounterId")
     version = models.IntegerField()
@@ -17,3 +20,5 @@ class FormalOffer(models.Model):
                                contract='{self.contract}', signedPdf='{self.signedPdf}')"""
 
 
+
+   

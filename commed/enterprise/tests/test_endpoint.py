@@ -1,8 +1,9 @@
-from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
-from enterprise.models import Enterprise
 import datetime
+
+from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
+
+from ..models import Enterprise
 
 # Create your tests here.
 BASE_URL: str = "/enterprise/"

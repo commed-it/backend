@@ -1,9 +1,9 @@
 import datetime
 
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 
-from enterprise.models import Enterprise
+from ..models import Enterprise
 
 
 class GradesTestCase(TestCase):
@@ -48,8 +48,8 @@ class GradesTestCase(TestCase):
             description="<strong>This is a strong statement, lady</strong>",
         )
 
-
     def test_content(self):
         enterprise = Enterprise.objects.get(id=1)
         self.assertEqual(1, enterprise.owner.pk)
         self.assertEqual('12345678X', enterprise.NIF)
+

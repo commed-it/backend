@@ -1,6 +1,7 @@
-from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
+import datetime
+
 from django.contrib.auth.models import User
+
 from product.models import Product, Tag
 import datetime
 
@@ -78,7 +79,7 @@ class ApiCRUDWorks(APITestCase):
                 "description": "ekjpoeasjdmpa",
                 "latitude": 0.0,
                 "longitude": 0.0,
-                "tag" : [1]
+                "tag": [1]
             },
         )
         self.assertEqual(201, response.status_code)
