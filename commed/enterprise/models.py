@@ -15,4 +15,3 @@ class Enterprise(models.Model):
         return f"""Enterprise(owner={self.owner}, NIF='{self.NIF}',
                               name='{self.name}', contactInfo='Contact Info'
                               descripton='{self.description}')"""
-
