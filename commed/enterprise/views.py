@@ -1,8 +1,10 @@
-from django.shortcuts import render
-from .serializers import EnterpriseSerializer
-from .models import Enterprise
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
+
+from .models import Enterprise
+from .serializers import EnterpriseSerializer
+
+
 #
 # Create your views here.
 
