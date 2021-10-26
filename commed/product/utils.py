@@ -3,7 +3,7 @@ from functools import lru_cache
 from .models import Category
 
 
-@lru_cache
+@lru_cache(maxsize=1)
 def get_nlp():
     import spacy
     print('imported spacy')
