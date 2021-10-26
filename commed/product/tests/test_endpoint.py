@@ -1,9 +1,9 @@
 import datetime
 
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
 
-from ..models import Product, Tag
+from product.models import Product, Tag
+import datetime
 
 # Create your tests here.
 BASE_URL: str = "/product/"

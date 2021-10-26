@@ -34,3 +34,4 @@ class ApiDeleteExamWithGrade(APITestCase):
     def test_not_found(self):
         response = self.client.get("/user/2/")
         self.assertEqual(404, response.status_code)
+

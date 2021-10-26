@@ -10,3 +10,4 @@ from .serializers import CustomUserSerializer
 class UserRetrieve(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
+

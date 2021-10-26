@@ -1,12 +1,12 @@
 import datetime
 
-from django.contrib.auth.models import User
 from django.test import TestCase
-
+from django.contrib.auth.models import User
+from offer.models import Encounter
 from product.models import Product
 
 
-class ProductTestCase(TestCase):
+class EncounterTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -33,21 +33,43 @@ class ProductTestCase(TestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
-        p = Product.objects.create(
+
+        product1 = Product.objects.create(
             owner=user_2,
             description="gertgtg3",
             latitude=0.0,
             longitude=0.0
         )
-        p.tag.add()
-        Product.objects.create(
+        product2 = Product.objects.create(
             owner=user_1,
             description="ekjpoeasjdmpa",
             latitude=0.0,
             longitude=0.0
         )
+        client1 = User.objects.create(
+            username="eminaa",
+            password="complexpass",
+            email="furnace@gmail.com",
+            first_name="Linguini",
+            last_name="Kitchen",
+        )
+        client2 = User.objects.create(
+            username="sergi",
+            password="complexpass",
+            email="quimpm@gmail.com",
+            first_name="Macarroni",
+            last_name="Diabola",
+        )
+        e = Encounter.objects.create(
+            client=client1,
+            product=product2
+        )
+        Encounter.objects.create(
+            client=client2,
+            product=product2
+        )
 
     def test_content(self):
-        product = Product.objects.get(id=1)
-        self.assertEqual(2, product.owner.pk)
-        self.assertEqual("gertgtg3", product.description)
+        encounter = Encounter.objects.get(id=1)
+        self.assertEqual(3, encounter.client.pk)
+        self.assertEqual(2, encounter.product.pk)

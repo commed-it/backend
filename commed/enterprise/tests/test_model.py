@@ -52,3 +52,4 @@ class GradesTestCase(TestCase):
         enterprise = Enterprise.objects.get(id=1)
         self.assertEqual(1, enterprise.owner.pk)
         self.assertEqual('12345678X', enterprise.NIF)
+
