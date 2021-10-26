@@ -1,8 +1,10 @@
-from rest_framework.test import APITestCase
-from django.contrib.auth.models import User
 from io import StringIO
+
+from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
+from rest_framework.test import APITestCase
+
 
 class InitadminTest(TestCase):
     def test_command_output(self):
@@ -11,6 +13,7 @@ class InitadminTest(TestCase):
         self.assertIn('successfully', out.getvalue())
         call_command('initadmin', stdout=out)
         self.assertIn('already', out.getvalue())
+
 
 class ApiDeleteExamWithGrade(APITestCase):
     def setUp(self):

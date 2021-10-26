@@ -1,7 +1,7 @@
 import datetime
 
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 
 from ..models import Enterprise
 
@@ -47,7 +47,6 @@ class GradesTestCase(TestCase):
             contactInfo="paco@paco.com",
             description="<strong>This is a strong statement, lady</strong>",
         )
-
 
     def test_content(self):
         enterprise = Enterprise.objects.get(id=1)

@@ -1,8 +1,9 @@
-from rest_framework.test import APITestCase
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
-from ..models import Product, Tag
 import datetime
+
+from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
+
+from ..models import Product, Tag
 
 # Create your tests here.
 BASE_URL: str = "/product/"
@@ -78,7 +79,7 @@ class ApiCRUDWorks(APITestCase):
                 "description": "ekjpoeasjdmpa",
                 "latitude": 0.0,
                 "longitude": 0.0,
-                "tag" : [1]
+                "tag": [1]
             },
         )
         self.assertEqual(201, response.status_code)
