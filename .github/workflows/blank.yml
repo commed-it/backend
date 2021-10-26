@@ -36,4 +36,5 @@ jobs:
       - name: Charge env vars and run tests
         run: |
           set -o allexport; source commed/.env-sample; set +o allexport
-          python3 commed/manage.py test
+          cd commed/
+          python3 manage.py test
