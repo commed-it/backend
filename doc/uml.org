@@ -48,6 +48,7 @@ User "1" -- "1" Enterprise : owns >
 Product "1" -- "0..*" Encounter : startedChat >
 FormalOffer "0..*" -- "1" Encounter : startedFormalOffer <
 SignedPDF "0..1" -- "1" FormalOffer : createdPDF <
+
 #+end_src
 
 #+RESULTS:
