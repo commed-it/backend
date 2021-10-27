@@ -20,13 +20,14 @@ class Category(models.Model):
 class Product(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
-    description = models.CharField(max_length=350)
+    description = models.TextField()
     latitude = models.FloatField()
     longitude = models.FloatField()
     tag = models.ManyToManyField(Tag)
 
     def __str__(self):
-        return f"Product(owner={self.owner}, title={self.title})"
+        return f"Product(owner={self.owner}, title={self.title}," \
+               f" latitude={self.latitude}, longitude={self.longitude}, tag={self.tag})"
 
 
 class ProductImage(models.Model):
