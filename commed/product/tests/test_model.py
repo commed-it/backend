@@ -11,10 +11,7 @@ class ProductTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         """
-        Sets Up the Grade
-        """
-        """
-        Sets Up the Enterprises
+        Sets Up the Products
         """
         time = datetime.datetime(
             2020, 12, 13, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(0))
