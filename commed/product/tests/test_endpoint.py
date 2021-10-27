@@ -1,9 +1,10 @@
 import datetime
+import json
 
 from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
 
-from product.models import Product, Tag
-import datetime
+from ..models import Product, Tag
 
 # Create your tests here.
 BASE_URL: str = "/product/"
@@ -38,7 +39,7 @@ class ApiCRUDWorks(APITestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
-        Tag.objects.create(
+        self.fruit = Tag.objects.create(
             name="fruit"
         )
         p = Product.objects.create(
@@ -72,29 +73,32 @@ class ApiCRUDWorks(APITestCase):
         """
         Test create enterprise
         """
+        fruit_ = json.dumps({
+            "owner": 1,
+            "title": "A title for create product",
+            "description": "ekjpoeasjdmpa",
+            "tag": [{"name": "fruit"}],
+            "latitude": 0.0,
+            "longitude": 0.0,
+        })
         response = self.client.post(
             BASE_URL,
-            {
-                "owner": 1,
-                "description": "ekjpoeasjdmpa",
-                "latitude": 0.0,
-                "longitude": 0.0,
-                "tag": [1]
-            },
+            fruit_, content_type='application/json'
         )
         self.assertEqual(201, response.status_code)
 
     def test_update_product(self):
         response = self.client.put(
             BASE_URL + "1/",
-            {
+            json.dumps({
                 "owner": 1,
+                "title": "Title for update",
                 "description": "ekjpoeasjdmpa",
                 "latitude": 0.0,
                 "longitude": 0.0,
-                "tag": [1],
-                "images": []
-            },
+                "tag": [{"name":"fruit"}],
+                "images": [],
+            }), content_type='application/json'
         )
         self.assertEqual(200, response.status_code)
 
@@ -110,3 +114,4 @@ class ApiCRUDWorks(APITestCase):
     def test_delete_product(self):
         response = self.client.delete(BASE_URL + '1/')
         self.assertEqual(204, response.status_code)
+
