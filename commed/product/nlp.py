@@ -5,7 +5,7 @@ from .models import Category, Product
 
 THRESHOLD = 0.5
 
-@lru_cache
+@lru_cache(maxsize=1)
 def get_nlp():
     import spacy
     print('imported spacy')

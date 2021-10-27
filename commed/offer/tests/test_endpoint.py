@@ -1,12 +1,12 @@
-import datetime
-
+from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-
-from product.models import Product, Tag
+from offer.models import Encounter
+from product.models import Product
 import datetime
 
 # Create your tests here.
-BASE_URL: str = "/product/"
+BASE_URL: str = "/offer/"
 
 
 class ApiCRUDWorks(APITestCase):
@@ -38,67 +38,81 @@ class ApiCRUDWorks(APITestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
-        Tag.objects.create(
-            name="fruit"
-        )
-        p = Product.objects.create(
+
+        product1 = Product.objects.create(
             owner=user_2,
             description="gertgtg3",
             latitude=0.0,
             longitude=0.0
         )
-        Product.objects.create(
+        product2 = Product.objects.create(
             owner=user_1,
             description="ekjpoeasjdmpa",
             latitude=0.0,
             longitude=0.0
         )
+        client1 = User.objects.create(
+            username="emina",
+            password="complexpass",
+            email="furnace@gmail.com",
+            first_name="Linguini",
+            last_name="Kitchen",
+        )
+        client2 = User.objects.create(
+            username="nico",
+            password="complexpass",
+            email="quimpm@gmail.com",
+            first_name="Macarroni",
+            last_name="Diabola",
+        )
+        e = Encounter.objects.create(
+            client=client1,
+            product=product1
+        )
+        Encounter.objects.create(
+            client=client2,
+            product=product2
+        )
 
-    def test_list_product(self):
+    def test_list_encounter(self):
         """
         Test the list type in CRUD.
         """
         response = self.client.get(BASE_URL)
         self.assertEqual(200, response.status_code)
 
-    def test_get_product(self):
+    def test_get_encounter(self):
         """
         Test the get type in CRUD.
         """
         response = self.client.get(BASE_URL + "1/")
         self.assertEqual(200, response.status_code)
 
-    def test_create_product(self):
+    def test_create_encounter(self):
         """
-        Test create enterprise
+        Test create encounter
         """
         response = self.client.post(
             BASE_URL,
             {
-                "owner": 1,
-                "description": "ekjpoeasjdmpa",
-                "latitude": 0.0,
-                "longitude": 0.0,
-                "tag": [1]
+                "client": 1,
+                "product": 1
+
             },
         )
         self.assertEqual(201, response.status_code)
 
-    def test_update_product(self):
+    def test_update_encounter(self):
         response = self.client.put(
             BASE_URL + "1/",
             {
-                "owner": 1,
-                "description": "ekjpoeasjdmpa",
-                "latitude": 0.0,
-                "longitude": 0.0,
-                "tag": [1],
-                "images": []
+                 "client": 1,
+                "product": 1
             },
         )
         self.assertEqual(200, response.status_code)
 
-    def test_patch_product(self):
+    def test_patch_encounter(self):
         response = self.client.patch(
             BASE_URL + "1/",
             {
@@ -107,6 +121,6 @@ class ApiCRUDWorks(APITestCase):
         )
         self.assertEqual(200, response.status_code)
 
-    def test_delete_product(self):
+    def test_delete_encounter(self):
         response = self.client.delete(BASE_URL + '1/')
         self.assertEqual(204, response.status_code)

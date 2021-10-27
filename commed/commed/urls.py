@@ -32,5 +32,6 @@ urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/registration/", include("dj_rest_auth.registration.urls")),
     path("enterprise/", include("enterprise.urls")),
-    path("product/", include("product.urls"))
+    path("product/", include("product.urls")),
+    path("offer/", include("offer.urls"))
 ]
