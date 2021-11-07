@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'enterprise.apps.EnterpriseConfig',
     'product.apps.ProductConfig',
-    'offer.apps.OfferConfig'
+    'offer.apps.OfferConfig',
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 REST_FRAMEWORK = {
@@ -184,3 +187,7 @@ if os.getenv("EMAIL_OPTION"):
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
