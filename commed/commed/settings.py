@@ -188,6 +188,12 @@ if os.getenv("EMAIL_OPTION"):
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True 
+    CORS_ALLOW_CREDENTIALS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+    ]
+    
