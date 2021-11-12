@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         user_1 = User.objects.create(
-            id=-1,
+            id=1,
             username="furnusmicrowavus",
             password="complexpass",
             email="furnace@gmail.com",
@@ -20,7 +20,7 @@ class Command(BaseCommand):
             last_name="Kitchen",
         )
         user_2 = User.objects.create(
-            id=-2,
+            id=2,
             username="quimpm",
             password="complexpass",
             email="quimpm@gmail.com",

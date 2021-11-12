@@ -214,3 +214,10 @@ class ApiCRUDWorks(APITestCase):
     def test_delete_formal_offer(self):
         response = self.client.delete(BASE_URL + "formaloffer/" + '1/')
         self.assertEqual(204, response.status_code)
+
+    def test_list_user_formal_offer(self):
+        """
+        Test the list type in CRUD.
+        """
+        response = self.client.get(BASE_URL + "formaloffer/user/1")
+        self.assertEqual(200, response.status_code)

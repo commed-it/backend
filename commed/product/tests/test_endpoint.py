@@ -115,3 +115,10 @@ class ApiCRUDWorks(APITestCase):
         response = self.client.delete(BASE_URL + '1/')
         self.assertEqual(204, response.status_code)
 
+    def test_list_product(self):
+        """
+        Test the list type in CRUD.
+        """
+        response = self.client.get(BASE_URL+"user/1")
+        self.assertEqual(200, response.status_code)
+
