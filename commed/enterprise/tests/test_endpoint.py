@@ -60,6 +60,13 @@ class ApiCRUDWorks(APITestCase):
         response = self.client.get(BASE_URL)
         self.assertEqual(200, response.status_code)
 
+    def test_user_enterprise(self):
+        """
+        Test the list type in CRUD.
+        """
+        response = self.client.get(BASE_URL+"user/1")
+        self.assertEqual(200, response.status_code)
+
     def test_get_enterprise(self):
         """
         Test the get type in CRUD.
