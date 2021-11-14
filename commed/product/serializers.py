@@ -59,24 +59,17 @@ class ProductSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        print(validated_data)
-        print(instance)
-        if validated_data.__contains__('owner'):
-            validated_data.pop('owner')
         if validated_data.__contains__('tag'):
             tags = [check_categories(tag) for tag in validated_data.pop('tag')]
             instance.tag.set(tags)
         productimages = []
-        
         if validated_data.__contains__('productimage_set'):
             productimages = validated_data.pop('productimage_set')
         for image in productimages:
             image['product'] = instance
             ProductImage.objects.create(**image)
-        
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        print(instance)
         return instance
 
 class LocationSerializer(serializers.Serializer):
