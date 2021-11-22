@@ -2,7 +2,6 @@ import datetime
 
 from unittest.mock import MagicMock
 from django.core.files import File
-from django.db.models.fields.files import FieldFile, FileField
 from django.test import TestCase
 from django.contrib.auth.models import User
 from offer.models import Encounter, FormalOffer
