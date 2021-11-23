@@ -1,1 +1,4 @@
-media**
+media/*
+
+!media/profile.png
+!media/banner.jpg
