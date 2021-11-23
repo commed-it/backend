@@ -86,3 +86,12 @@ class SearchRequestBodySerializer(serializers.Serializer):
         if not data:
             raise serializers.ValidationError("Must include at least one field on request body")
         return data
+
+
+class RecomendationRequestBodySerializer(serializers.Serializer):
+    location = LocationSerializer()
+
+    def validate(self, data):
+        if not data:
+            raise serializers.ValidationError("Must include at least one field on request body")
+        return data

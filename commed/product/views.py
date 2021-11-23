@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .latlon import get_close_products
 from .models import Product, ProductImage
 from .nlp import search_by_tag
-from .serializers import ProductSerializer, SearchRequestBodySerializer
+from .serializers import ProductSerializer, SearchRequestBodySerializer, RecomendationRequestBodySerializer
 
 
 #
@@ -36,6 +36,26 @@ class SearchView(APIView):
             products = search_by_tag(products, data)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+class RecomendationView(APIView):
+    """
+    RecomendationView for recommending the closest products to the user
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        result = []
+        request = RecomendationRequestBodySerializer(data=request.data)
+        request.is_valid(True)
+        data = request.data
+        products = list(get_close_products(data.pop('location')))
+        if len(products) < 4:
+            result = products
+        else:
+            result = products[:4]
+        serializer = ProductSerializer(result, many=True)
+        return Response(serializer.data)
+        
 
 class UserProducts(APIView):
     """
