@@ -4,10 +4,10 @@ from .models import Encounter, FormalOffer
 
 
 class EncounterSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Encounter
-        fields = ("client", "product")
+        fields = ("id", "client", "product")
+
 
 class FormalOfferSerializer(serializers.ModelSerializer):
     class Meta:
