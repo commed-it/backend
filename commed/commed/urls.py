@@ -16,17 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
+from django.shortcuts import redirect
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
+
 
 API_TITLE = "Commed Api"
 API_DESCRIPTION = """ A REST API for using Commed"""
 schema_view = get_schema_view(title=API_TITLE)
 
 urlpatterns = [
-    path('', lambda request: HttpResponse("Hello world!"), name="home"),
+    path('', lambda x: redirect("/docs/", x), name="home"),
     path("admin/", admin.site.urls),
-    path("docs/", include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
+    path("docs/", include_docs_urls(title=API_TITLE, description=API_DESCRIPTION), name="docs"),
     path("user/", include("user.urls")),
     path("schema/", schema_view),
     path("auth/", include("dj_rest_auth.urls")),
@@ -34,4 +36,5 @@ urlpatterns = [
     path("enterprise/", include("enterprise.urls")),
     path("product/", include("product.urls")),
     path("offer/", include("offer.urls")),
+    path("chat/", include("chat.urls"))
 ]

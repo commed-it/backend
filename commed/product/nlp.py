@@ -1,6 +1,6 @@
 from functools import lru_cache, reduce
 from typing import List
-
+from commed.settings import DEBUG
 from .models import Category, Product
 
 THRESHOLD = 0.5
@@ -8,7 +8,8 @@ THRESHOLD = 0.5
 @lru_cache(maxsize=1)
 def get_nlp():
     import spacy
-    print('imported spacy')
+    if DEBUG:
+        print('imported spacy')
     return spacy.load("en_core_web_lg")
 
 
