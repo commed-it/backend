@@ -24,5 +24,13 @@ services:
     volumes:
       # /host/path:/container/path
       - ../database/data:/var/lib/postgresql/data
+  redis-back:
+    image: redis
+    container_name: commed-redis
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT}:${REDIS_INTERNAL_PORT}
+
 volumes:
   database:
