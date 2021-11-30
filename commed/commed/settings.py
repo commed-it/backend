@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'enterprise.apps.EnterpriseConfig',
     'product.apps.ProductConfig',
     'offer.apps.OfferConfig',
+    'chat.apps.ChatConfig',
     "corsheaders"
 ]
 
@@ -206,3 +207,12 @@ else:
         'http://localhost:3000',
     ]
 
+ASGI_APPLICATION = 'commed.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

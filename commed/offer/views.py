@@ -1,16 +1,12 @@
 from django.shortcuts import render
-from .serializers import EncounterSerializer
+from .serializers import EncounterSerializer, FormalOfferSerializer
 from rest_framework import viewsets
-from .serializers import FormalOfferSerializer
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
 from .models import Encounter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from product.models import Product
-import itertools
-
-
 
 
 class EncounterViewSet(viewsets.ModelViewSet):
