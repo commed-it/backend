@@ -74,22 +74,22 @@ class Command(BaseCommand):
         productImage1 = ProductImage.objects.create(
             name="security",
             product=product1,
-            image="security.jpg"
+            image="images/security.jpg"
         )
         productImage2 = ProductImage.objects.create(
             name="clean",
             product=product2,
-            image="clean.jpg"
+            image="images/clean.jpg"
         )
         productImage3 = ProductImage.objects.create(
             name="fruit1",
             product=product3,
-            image="fruit4.jpg"
+            image="images/fruit4.jpg"
         )
         productImage4 = ProductImage.objects.create(
             name="fruit2",
             product=product3,
-            image="fruit5.jpg"
+            image="images/fruit5.jpg"
         )
 
         apple_tag = Tag.objects.create(
@@ -150,7 +150,7 @@ class Command(BaseCommand):
         productImage5=ProductImage.objects.create(
             name="pineapple",
             product=product4,
-            image="pineapple.jpg"
+            image="images/pineapple.jpg"
         )
 
         product4.tag.set([apple_tag, apples_tag, pear_tag, pears_tag,pineapple_tag])
@@ -166,7 +166,7 @@ class Command(BaseCommand):
         productImage6=ProductImage.objects.create(
             name="microwave",
             product=product5,
-            image="microwave.jpg"
+            image="images/microwave.jpg"
         )
         client1 = User.objects.create(
             username="emina",
@@ -200,24 +200,32 @@ class Command(BaseCommand):
         FormalOffer.objects.create(
             encounterId = e,
             version = 2,
-            contract = "adsfasdf",
+            contract = "Contract2",
             signedPdf = file_mock
+        )
+        FormalOffer.objects.create(
+            encounterId=e3,
+            version=1,
+            contract="Contract",
+            signedPdf=file_mock
         )
         FormalOffer.objects.create(
             encounterId = e2,
             version = 3,
-            contract = "adsfasdf",
+            contract = "Contract",
             signedPdf = file_mock
         )
         Enterprise.objects.create(
             owner=user_1,
-            NIF="12345678X",
+            NIF="2345678X",
             name="Securitas",
             contactInfo="security@gmail.com",
             description="Securitas USA's services include guarding services, patrols and inspections, access control, "
                         "concierge and receptionist services,"
                         " perimeter console operators, alarm response, and specialized client requested services."
                         "Securitas serves a wide range of customers in a variety of industries and customer segments.",
+            profileImage="images/securityProfile.jpg",
+            bannerImage="images/securityBanner.jpg"
         )
         Enterprise.objects.create(
             owner=user_2,
@@ -228,10 +236,12 @@ class Command(BaseCommand):
                         "Professional cleaning company for companies and individuals that offers services for offices,"
                         " apartments,"
                         " houses, buildings, hotels and all kinds of personal spaces",
+            profileImage="images/cleanProfile.jpg",
+            bannerImage="images/cleanBanner.jpg"
         )
         Enterprise.objects.create(
             owner=user_3,
-            NIF="21345678X",
+            NIF="21346578X",
             name="Vegefruit",
             contactInfo="vegefruit@gmail.com",
             description="In Vegefruit you will find fresh fruits, vegetables and other organic products directly from"
@@ -242,12 +252,16 @@ class Command(BaseCommand):
                         " fruits and vegetables online by different criteria: price, province of origin, type of "
                         "growing, organic ... The savings by reducing the margin of brokering can thus be invested in "
                         "higher quality agriculture and a fairer price for all.",
+            profileImage="images/fruitProfile.jpg",
+            bannerImage="images/fruitBanner.jpg"
         )
         Enterprise.objects.create(
             owner=user_4,
-            NIF="21345678X",
+            NIF="213456876X",
             name="TechnoMag",
             contactInfo="technomag@gmail.com",
             description="Our reputation is rooted in customer service. We specialize in offering high-quality, energy efficient kitchen and"
                         " laundry appliances. Choose our products and appliances and trust they'll handle your family's chores with care. ",
+            profileImage="images/applianceProfile.jpg",
+            bannerImage="images/applianceBanner.jpg"
         )
