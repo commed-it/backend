@@ -13,6 +13,7 @@ services:
       - ${OPEN_PORT}:${DJANGO_PORT}
     depends_on:
       - database
+      - redis-back
     restart: always
     stdin_open: true
     tty: true
