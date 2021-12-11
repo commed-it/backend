@@ -266,5 +266,5 @@ class Command(BaseCommand):
             description="Our reputation is rooted in customer service. We specialize in offering high-quality, energy efficient kitchen and"
                         " laundry appliances. Choose our products and appliances and trust they'll handle your family's chores with care. ",
             profileImage="applianceProfile.png",
-            bannerImage="applianceBanner.png"
+            bannerImage="applianceBanner.jpg"
         )
