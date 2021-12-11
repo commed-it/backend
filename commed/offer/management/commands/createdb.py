@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = "Adds things to the database"
 
     def handle(self, *args, **kwargs):
-        user_1 = User.objects.create(
+        user_1 = User.objects.create_user(
             id=1,
             username="user1",
             password="complexpass",
@@ -20,7 +20,7 @@ class Command(BaseCommand):
             first_name="John",
             last_name="Doe",
         )
-        user_2 = User.objects.create(
+        user_2 = User.objects.create_user(
             id=2,
             username="user2",
             password="complexpass",
@@ -28,7 +28,7 @@ class Command(BaseCommand):
             first_name="Jane",
             last_name="Joe",
         )
-        user_3 = User.objects.create(
+        user_3 = User.objects.create_user(
             id=3,
             username="user3",
             password="complexpass",
@@ -36,7 +36,7 @@ class Command(BaseCommand):
             first_name="Jamie",
             last_name="Oliver",
         )
-        user_4 = User.objects.create(
+        user_4 = User.objects.create_user(
             id=4,
             username="user4",
             password="complexpass",
