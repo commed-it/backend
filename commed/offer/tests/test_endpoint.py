@@ -75,21 +75,23 @@ class ApiCRUDWorks(APITestCase):
             client=client2,
             product=product2
         )
-        
+        self.eid = e.id
+        self.e2id = e2.id
+
         # FormalOffer
         file_mock = MagicMock(spec=File)
         file_mock.name = 'test.pdf'
         FormalOffer.objects.create(
-            encounterId = e,
-            version = 2,
-            contract = "adsfasdf",
-            signedPdf = file_mock
+            encounterId=e,
+            version=2,
+            contract="adsfasdf",
+            signedPdf=file_mock
         )
         FormalOffer.objects.create(
-            encounterId = e2,
-            version = 3,
-            contract = "adsfasdf",
-            signedPdf = file_mock
+            encounterId=e2,
+            version=3,
+            contract="adsfasdf",
+            signedPdf=file_mock
         )
 
     """
@@ -102,14 +104,14 @@ class ApiCRUDWorks(APITestCase):
         """
         Test the list type in CRUD.
         """
-        response = self.client.get(BASE_URL+"encounter/")
+        response = self.client.get(BASE_URL + "encounter/")
         self.assertEqual(200, response.status_code)
 
     def test_get_encounter(self):
         """
         Test the get type in CRUD.
         """
-        response = self.client.get(BASE_URL + "encounter/" + "1/")
+        response = self.client.get(BASE_URL + "encounter/" + f"{self.eid}/")
         self.assertEqual(200, response.status_code)
 
     def test_create_encounter(self):
@@ -128,7 +130,7 @@ class ApiCRUDWorks(APITestCase):
 
     def test_update_encounter(self):
         response = self.client.put(
-            BASE_URL + "encounter/" + "1/",
+            BASE_URL + "encounter/" + f"{self.eid}/",
             {
                 "client": 1,
                 "product": 1
@@ -138,7 +140,7 @@ class ApiCRUDWorks(APITestCase):
 
     def test_patch_encounter(self):
         response = self.client.patch(
-            BASE_URL + "encounter/" + "1/",
+            BASE_URL + "encounter/" + f"{self.eid}/",
             {
                 "client": 1,
             },
@@ -146,7 +148,7 @@ class ApiCRUDWorks(APITestCase):
         self.assertEqual(200, response.status_code)
 
     def test_delete_encounter(self):
-        response = self.client.delete(BASE_URL + "encounter/" + '1/')
+        response = self.client.delete(BASE_URL + "encounter/" + f'{self.eid}/')
         self.assertEqual(204, response.status_code)
 
     """
@@ -173,13 +175,12 @@ class ApiCRUDWorks(APITestCase):
         """
         Test create encounter
         """
-        encounter = Encounter.objects.get(id=1)
         file_mock = MagicMock(spec=File)
         file_mock.name = 'test.pdf'
         response = self.client.post(
             BASE_URL + "formaloffer/",
             {
-                "encounterId": encounter.id,
+                "encounterId": self.eid,
                 "version": 1,
                 "contract": "asdfasdfasdf",
                 "signedPdf": file_mock
@@ -190,11 +191,10 @@ class ApiCRUDWorks(APITestCase):
     def test_update_formal_offer(self):
         file_mock = MagicMock(spec=File)
         file_mock.name = 'test.pdf'
-        encounter = Encounter.objects.get(id=1)
         response = self.client.put(
             BASE_URL + "formaloffer/" + "1/",
             {
-                "encounterId": encounter.id,
+                "encounterId": self.eid,
                 "version": 4,
                 "contract": "hotal",
                 "signedPdf": file_mock
