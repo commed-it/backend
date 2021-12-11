@@ -2,9 +2,9 @@
 
 python3 manage.py collectstatic --no-input
 
-python3 manage.py makemigrations
-
 python3 manage.py flush --no-input
+
+python3 manage.py makemigrations
 
 python3 manage.py migrate
 
@@ -12,4 +12,4 @@ python3 manage.py createdb
 
 python3 manage.py initadmin
 
-gunicorn --bind 0.0.0.0:8000 commed.wsgi
+python3 server.py
