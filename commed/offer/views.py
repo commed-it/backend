@@ -56,26 +56,24 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     def get_when_im_product_owner(self, user_id):
         im_the_product_owner = FormalOffer.objects.filter(encounterId__product__owner__id=user_id)
         list_po = list(im_the_product_owner.select_related('encounterId', 'encounterId__client', 'encounterId__product'))
-        gen = ({
+        return ({
             'formalOffer': x,
             'encounter': x.encounterId,
             'product': x.encounterId.product,
             'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
         } for x in list_po)
-        return gen
 
     def get_when_im_client(self, user_id):
         imTheClient = FormalOffer.objects.filter(encounterId__client__id=user_id)
         listClient = list(
             imTheClient.select_related('encounterId', 'encounterId__product__owner', 'encounterId__product'))
-        generator = ({
+        return ({
             'formalOffer': x,
             'encounter': x.encounterId,
             'product': x.encounterId.product,
             'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner_id)
 
         } for x in listClient)
-        return generator
 
 
 class UserFormalOffers(APIView):
