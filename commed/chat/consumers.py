@@ -6,6 +6,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.contrib.auth.models import User
 
 from chat.models import Message
+from enterprise.models import Enterprise
 from offer.models import Encounter
 
 
@@ -16,36 +17,23 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     user: User
 
     async def connect(self):
-        username = self.scope["user"].username
         # Put on else if not wanted
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
-
-        # User is not connected if username == ''
-        # Now I don't really care about it, as it makes it hard to debug
-        print(f'username={username}')
-        if username == '':
-            await self.close('User is not authenticated')
-        else:
-            try:
-                self.user = await self.get_user_from_db(username)
-                uuid_room = uuid.UUID(self.room_name)
-                self.encounter = await self.get_encounter_from_db(uuid_room)
-                await self._create_connection()
-            except ValueError:
-                await self.close('UUID is not valid')
-            except Encounter.DoesNotExist:
-                await self.close('Encounter page does not exist')
-            except User.DoesNotExist:
-                await self.close('User does not exist. How did this happen?')
+        try:
+            uuid_room = uuid.UUID(self.room_name)
+            self.encounter = await self.get_encounter_from_db(uuid_room)
+            await self._create_connection()
+        except ValueError:
+            await self.close('UUID is not valid')
+        except Encounter.DoesNotExist:
+            await self.close('Encounter page does not exist')
+        except User.DoesNotExist:
+            await self.close('User does not exist. How did this happen?')
 
     @database_sync_to_async
-    def get_user_from_db(self, username):
-        return User.objects.get(username=username)
-
-    @database_sync_to_async
-    def get_encounter_from_db(self, uuid_room):
-        return Encounter.objects.get(id=uuid_room)
+    def get_user_from_db(self, user_id):
+        return User.objects.get(pk=user_id)
 
     async def _create_connection(self):
         # Join room group
@@ -64,8 +52,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive_json(self, content):
+        """
+        content = TextMessage {
+        , user :: Int
+        , text :: String
+        } | E
+
+        """
         # Send message to room group
-        _ = await self.create_message(self.user, content, self.encounter)
+        # Check
+
+        user = await self.get_user_from_db(content['user_id'])
+        _ = await self.create_message(user, content, self.encounter)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -73,6 +71,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 'message': content
             }
         )
+
+    @database_sync_to_async
+    def get_enterprise(self, user):
+        return Enterprise.objects.get(owner=user)
 
     @database_sync_to_async
     def create_message(self, sender: User, msg: str, context: Encounter):
