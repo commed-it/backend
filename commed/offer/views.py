@@ -1,6 +1,6 @@
 
 from enterprise.models import Enterprise
-from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer
+from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer
 from rest_framework import viewsets, mixins
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
@@ -44,7 +44,7 @@ def get_when_im_product_owner(user_id):
         'formalOffer': x,
         'encounter': x.encounterId,
         'product': x.encounterId.product,
-        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
+        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client)
     } for x in list_po)
 
 
@@ -56,10 +56,31 @@ def get_when_im_client(user_id):
         'formalOffer': x,
         'encounter': x.encounterId,
         'product': x.encounterId.product,
-        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner_id)
+        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner)
 
     } for x in listClient)
 
+
+def get_when_im_product_owner_encounter(user_id):
+    im_the_product_owner = Encounter.objects.filter(product__owner__id=user_id)
+    list_po = list(im_the_product_owner.select_related('client', 'product'))
+    breakpoint()
+    return ({
+        'encounter': x,
+        'product': x.product,
+        'theOtherClient': Enterprise.objects.get(owner=x.client)
+    } for x in list_po)
+
+def get_when_im_client_encounter(user_id):
+    im_the_client = Encounter.objects.filter(client__id=user_id)
+    list_client = list(
+        im_the_client.select_related('product__owner', 'product'))
+    return ({
+        'encounter': x,
+        'product': x.product,
+        'theOtherClient': Enterprise.objects.get(owner=x.product.owner)
+
+    } for x in list_client)
 
 class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
@@ -72,6 +93,20 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
         res.extend(get_when_im_product_owner(user_id))
         serializer = FormalOfferEncounterSerializer(res, many=True)
         return Response(serializer.data)
+
+
+class ListChatsViewSet(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+
+    def list(self, *args, **kwargs):
+        user_id = kwargs['user_id']
+        res = []
+        res.extend(get_when_im_client_encounter(user_id))
+        res.extend(get_when_im_product_owner_encounter(user_id))
+        serializer = ListChatSerializer(res, many=True)
+        return Response(serializer.data)
+
+
 
 class UserFormalOffers(APIView):
     """

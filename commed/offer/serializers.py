@@ -17,6 +17,12 @@ class FormalOfferSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ListChatSerializer(serializers.Serializer):
+    encounter = EncounterSerializer()
+    product = ProductSerializer()
+    theOtherClient = EnterpriseSerializer()
+
+
 class FormalOfferEncounterSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
     formalOffer = FormalOfferSerializer()
