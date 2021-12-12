@@ -1,6 +1,6 @@
 from rest_framework.routers import SimpleRouter
 from .views import EncounterViewSet
-from .views import FormalOfferViewSet, UserFormalOffers, FormalOfferFromUserViewSet, ListChatsViewSet
+from .views import FormalOfferViewSet, UserFormalOffers, FormalOfferFromUserViewSet, ListChatsViewSet, CreateIfNotExistsEncounter
 from django.urls import path
 
 router = SimpleRouter()
@@ -12,4 +12,5 @@ urlpatterns = \
         path('formaloffer/user/<int:user_id>', UserFormalOffers.as_view()),
         path('formaloffer/fromUser/<int:user_id>', FormalOfferFromUserViewSet.as_view({'get': 'list'})),
         path('encounter/fromUser/<int:user_id>', ListChatsViewSet.as_view({'get': 'list'})),
+        path('encounter/create-if-not-exists/', CreateIfNotExistsEncounter.as_view({'post': 'create'})),
     ] + router.urls

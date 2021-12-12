@@ -22,7 +22,6 @@ class ListChatSerializer(serializers.Serializer):
     product = ProductSerializer()
     theOtherClient = EnterpriseSerializer()
 
-
 class FormalOfferEncounterSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
     formalOffer = FormalOfferSerializer()
