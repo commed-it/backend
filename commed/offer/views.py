@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 from enterprise.models import Enterprise
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer
@@ -9,7 +8,6 @@ from .models import Encounter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from product.models import Product
-from django.db.models import Q
 import dataclasses as dto
 
 
@@ -33,10 +31,11 @@ class FormalOfferViewSet(viewsets.ModelViewSet):
 
 @dto.dataclass
 class FormalOFferFromUserDTO:
-    formalOffer : dict
-    encounter : dict
+    formalOffer: dict
+    encounter: dict
     product: dict
     theOtherClient: dict
+
 
 class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
@@ -45,25 +44,35 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     def list(self, *args, **kwargs):
         user_id = kwargs['user_id']
         res = []
+        res.extend(self.get_when_im_client(user_id))
+        res.extend(self.get_when_im_product_owner(user_id))
+        serializer = FormalOfferEncounterSerializer(res, many=True)
+        return Response(serializer.data)
+
+    def get_when_im_product_owner(self, user_id):
+        im_the_product_owner = FormalOffer.objects.filter(encounterId__product__owner__id=user_id)
+        list_po = list(
+            im_the_product_owner.select_related('encounterId', 'encounterId__client', 'encounterId__product'))
+        gen = ({
+            'formalOffer': x,
+            'encounter': x.encounterId,
+            'product': x.encounterId.product,
+            'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
+        } for x in list_po)
+        return gen
+
+    def get_when_im_client(self, user_id):
         imTheClient = FormalOffer.objects.filter(encounterId__client__id=user_id)
-        listClient = list(imTheClient.select_related('encounterId', 'encounterId__product__owner', 'encounterId__product'))
-        res.extend({
+        listClient = list(
+            imTheClient.select_related('encounterId', 'encounterId__product__owner', 'encounterId__product'))
+        generator = ({
             'formalOffer': x,
             'encounter': x.encounterId,
             'product': x.encounterId.product,
             'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner_id)
 
         } for x in listClient)
-        imTheProductOwner = FormalOffer.objects.filter(encounterId__product__owner__id=user_id)
-        listPO = list(imTheProductOwner.select_related('encounterId', 'encounterId__client', 'encounterId__product'))
-        res.extend({
-           'formalOffer': x,
-           'encounter': x.encounterId,
-           'product': x.encounterId.product,
-           'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
-                        } for x in listPO)
-        serializer = FormalOfferEncounterSerializer(res, many=True)
-        return Response(serializer.data)
+        return generator
 
 
 class UserFormalOffers(APIView):
