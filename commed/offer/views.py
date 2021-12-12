@@ -41,6 +41,30 @@ class FormalOFferFromUserDTO:
     theOtherClient: dict
 
 
+def get_when_im_product_owner(user_id):
+    im_the_product_owner = FormalOffer.objects.filter(encounterId__product__owner__id=user_id)
+    list_po = list(im_the_product_owner.select_related('encounterId', 'encounterId__client', 'encounterId__product'))
+    return ({
+        'formalOffer': x,
+        'encounter': x.encounterId,
+        'product': x.encounterId.product,
+        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
+    } for x in list_po)
+
+
+def get_when_im_client(user_id):
+    imTheClient = FormalOffer.objects.filter(encounterId__client__id=user_id)
+    listClient = list(
+        imTheClient.select_related('encounterId', 'encounterId__product__owner', 'encounterId__product'))
+    return ({
+        'formalOffer': x,
+        'encounter': x.encounterId,
+        'product': x.encounterId.product,
+        'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner_id)
+
+    } for x in listClient)
+
+
 class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
     permission_classes = [AllowAny]
@@ -48,32 +72,10 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     def list(self, *args, **kwargs):
         user_id = kwargs['user_id']
         res = []
-        res.extend(self.get_when_im_client(user_id))
-        res.extend(self.get_when_im_product_owner(user_id))
+        res.extend(get_when_im_client(user_id))
+        res.extend(get_when_im_product_owner(user_id))
         serializer = FormalOfferEncounterSerializer(res, many=True)
         return Response(serializer.data)
-
-    def get_when_im_product_owner(self, user_id):
-        im_the_product_owner = FormalOffer.objects.filter(encounterId__product__owner__id=user_id)
-        list_po = list(im_the_product_owner.select_related('encounterId', 'encounterId__client', 'encounterId__product'))
-        return ({
-            'formalOffer': x,
-            'encounter': x.encounterId,
-            'product': x.encounterId.product,
-            'theOtherClient': Enterprise.objects.get(owner=x.encounterId.client_id)
-        } for x in list_po)
-
-    def get_when_im_client(self, user_id):
-        imTheClient = FormalOffer.objects.filter(encounterId__client__id=user_id)
-        listClient = list(
-            imTheClient.select_related('encounterId', 'encounterId__product__owner', 'encounterId__product'))
-        return ({
-            'formalOffer': x,
-            'encounter': x.encounterId,
-            'product': x.encounterId.product,
-            'theOtherClient': Enterprise.objects.get(owner=x.encounterId.product.owner_id)
-
-        } for x in listClient)
 
 
 class UserFormalOffers(APIView):
