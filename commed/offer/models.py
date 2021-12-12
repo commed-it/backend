@@ -17,7 +17,7 @@ class FormalOffer(models.Model):
     encounterId = models.ForeignKey(Encounter, on_delete=models.CASCADE, null=False, related_name="encounterId")
     version = models.IntegerField()
     contract = models.TextField()
-    signedPdf = models.FileField()
+    signedPdf = models.FileField(null=True)
 
     def __str__(self):
         return f"""FormalOffer(encounterId ={self.encounterId}, version='{self.version}',

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from enterprise.serializers import EnterpriseSerializer
+from product.serializers import ProductSerializer
 from .models import Encounter, FormalOffer
 
 
@@ -13,3 +15,10 @@ class FormalOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormalOffer
         fields = ("encounterId", "version", "contract", "signedPdf")
+
+
+class FormalOfferEncounterSerializer(serializers.Serializer):
+    encounter = EncounterSerializer()
+    formalOffer = FormalOfferSerializer()
+    product = ProductSerializer()
+    theOtherClient = EnterpriseSerializer()
