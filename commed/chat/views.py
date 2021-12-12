@@ -5,6 +5,7 @@ from django.shortcuts import render
 from rest_framework import serializers, viewsets
 from rest_framework.permissions import AllowAny
 
+
 from chat.models import Message
 from chat.serializers import MessageSerializer
 from offer.models import Encounter
@@ -31,4 +32,3 @@ class MessageViewSet(viewsets.ModelViewSet):
             return Message.objects.filter(channel_context=encounter).order_by('-timestamp')
         except: # All errors should return None
             return Message.objects.none()
-

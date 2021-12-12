@@ -1,6 +1,8 @@
 import os
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
+
+from chat.models import Message
 from offer.models import Encounter, FormalOffer
 from product.models import Product, Category, Tag, ProductImage
 from enterprise.models import Enterprise
@@ -171,30 +173,35 @@ class Command(BaseCommand):
             product=product5,
             image="microwave.jpg"
         )
-        client1 = User.objects.create(
-            username="emina",
-            password="complexpass",
-            email="emina@gmail.com",
-            first_name="Linguini",
-            last_name="S",
-        )
-        client2 = User.objects.create(
-            username="nico",
-            password="complexpass",
-            email="nico@gmail.com",
-            first_name="Macaroni",
-            last_name="Diabola",
-        )
+
         e = Encounter.objects.create(
-            client=client1,
+            client=user_4,
             product=product1
         )
+        # Little chat
+        msg3 = Message.objects.create(
+            author=user_4,
+            msg="My firstborn child.",
+            channel_context=e
+        )
+        msg2 = Message.objects.create(
+            author=user_1,
+            msg="How much are you willing to pay?",
+            channel_context=e
+        )
+        msg1 = Message.objects.create(
+            author=user_4,
+            msg="I want this.",
+            channel_context=e
+        )
+
+
         e2 = Encounter.objects.create(
-            client=client2,
+            client=user_4,
             product=product2
         )
         e3 = Encounter.objects.create(
-            client=client2,
+            client=user_2,
             product=product3
         )
         # FormalOffer
