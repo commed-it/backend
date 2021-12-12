@@ -31,7 +31,7 @@ class FormalOfferViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 
-dto.dataclass
+@dto.dataclass
 class FormalOFferFromUserDTO:
     formalOffer : dict
     encounter : dict
