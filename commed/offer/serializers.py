@@ -8,13 +8,13 @@ from .models import Encounter, FormalOffer
 class EncounterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Encounter
-        fields = ("id", "client", "product")
+        fields = '__all__'
 
 
 class FormalOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormalOffer
-        fields = ("encounterId", "version", "contract", "signedPdf")
+        fields = '__all__'
 
 
 class FormalOfferEncounterSerializer(serializers.Serializer):

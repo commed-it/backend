@@ -53,7 +53,7 @@ class EncounterTestCase(TestCase):
             encounterId=e,
             version=2,
             contract="asdfasdf",
-            signedPdf=file_mock
+            pdf=file_mock
         )
 
     def test_content(self):
@@ -66,4 +66,4 @@ class EncounterTestCase(TestCase):
         formal_offer = FormalOffer.objects.get(id=1)
         self.assertEqual(2, formal_offer.version)
         self.assertEqual("asdfasdf", formal_offer.contract)
-        self.assertIn("test", formal_offer.signedPdf.name)
+        self.assertIn("test", formal_offer.pdf.name)

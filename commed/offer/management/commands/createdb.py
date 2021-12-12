@@ -111,13 +111,13 @@ class Command(BaseCommand):
             encounterId = e,
             version = 2,
             contract = "adsfasdf",
-            signedPdf = file_mock
+            pdf = file_mock
         )
         FormalOffer.objects.create(
             encounterId = e2,
             version = 3,
             contract = "adsfasdf",
-            signedPdf = file_mock
+            pdf = file_mock
         )
         Enterprise.objects.create(
             owner=user_1,
