@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 from enterprise.models import Enterprise
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer
@@ -9,7 +8,6 @@ from .models import Encounter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from product.models import Product
-from django.db.models import Q
 import dataclasses as dto
 
 
@@ -31,9 +29,7 @@ class FormalOfferViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 
-dto.dataclass
-
-
+@dto.dataclass
 class FormalOFferFromUserDTO:
     formalOffer: dict
     encounter: dict
@@ -76,7 +72,6 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
         res.extend(get_when_im_product_owner(user_id))
         serializer = FormalOfferEncounterSerializer(res, many=True)
         return Response(serializer.data)
-
 
 class UserFormalOffers(APIView):
     """

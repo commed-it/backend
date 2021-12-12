@@ -3,6 +3,8 @@ import os
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
+from enterprise.models import Enterprise
+
 
 class Command(BaseCommand):
     help = "Adds super user if it does not exist, with username and password as the configuration"
@@ -19,6 +21,13 @@ class Command(BaseCommand):
             admin.is_active = True
             admin.is_admin = True
             admin.save()
+            Enterprise.objects.create(
+                owner=admin,
+                NIF="0000000X",
+                name="Admin page",
+                contactInfo=admin_email,
+                description="Commed administration account. Feel free contact us if you have any problem."
+            )
             self.stdout.write('Admin successfully created!')
         else:
             self.stdout.write('Admin was already in the database!')
