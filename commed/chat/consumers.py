@@ -35,6 +35,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     def get_user_from_db(self, user_id):
         return User.objects.get(pk=user_id)
 
+    @database_sync_to_async
+    def get_encounter_from_db(self, uuid_room):
+        return Encounter.objects.get(id=uuid_room)
+
     async def _create_connection(self):
         # Join room group
         await self.channel_layer.group_add(
@@ -71,10 +75,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 'message': content
             }
         )
-
-    @database_sync_to_async
-    def get_enterprise(self, user):
-        return Enterprise.objects.get(owner=user)
 
     @database_sync_to_async
     def create_message(self, sender: User, msg: str, context: Encounter):
