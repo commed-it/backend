@@ -14,11 +14,21 @@ class Encounter(models.Model):
 
 
 class FormalOffer(models.Model):
+    class State(models.TextChoices):
+        SIGNED = 'SI', 'Signed'
+        NOTSIGNED = 'NS', 'Not Signed'
+
     encounterId = models.ForeignKey(Encounter, on_delete=models.CASCADE, null=False, related_name="encounterId")
     version = models.IntegerField()
     contract = models.TextField()
-    signedPdf = models.FileField()
+    pdf = models.FileField(null=True)
+    state = models.CharField(
+        max_length=2,
+        choices=State.choices,
+        default=State.SIGNED,
+    )
+
 
     def __str__(self):
         return f"""FormalOffer(encounterId ={self.encounterId}, version='{self.version}',
-                               contract='{self.contract}', signedPdf='{self.signedPdf}')"""
+                               contract='{self.contract}', signedPdf='{self.pdf}', state={self.state})"""
