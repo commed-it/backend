@@ -1,7 +1,6 @@
-
-from enterprise.models import Enterprise
+from django.shortcuts import render
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
 from .models import Encounter
@@ -9,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from product.models import Product
 import dataclasses as dto
+from enterprise.models import Enterprise
 
 
 class EncounterViewSet(viewsets.ModelViewSet):
@@ -114,25 +114,3 @@ class CreateIfNotExistsEncounter(viewsets.GenericViewSet):
         except Encounter.DoesNotExist:
             v = serializer.save()
             return Response(serializer.data)
-
-
-
-
-
-class UserFormalOffers(APIView):
-    """
-    Get all the Products owned by a user
-    """
-    permission_classes = [AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        encounters = []
-        formal_offers = []
-        user = request.path.split('/')[-1]
-        products = list(Product.objects.filter(owner=user))
-        for product in products:
-            encounters = encounters + list(Encounter.objects.filter(product=product.id))
-        for encounter in encounters:
-            formal_offers.append(FormalOffer.objects.get(encounterId=encounter))
-        serializer = FormalOfferSerializer(formal_offers, many=True)
-        return Response(serializer.data)
