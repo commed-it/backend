@@ -70,19 +70,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Send message to room group
         # Check
-        print(content)
-        parsed_message = json.loads(content["message"])
+        parsed_message = content
         if not is_the_message_correct(parsed_message):
             print("An error has occurred while parsing the data. Please check that the client is correct")
             print(f"data={content}, parsed_message={parsed_message}")
             return None
         user = await self.get_user_from_db(parsed_message['user'])
-        _ = await self.create_message(user, content['message'], self.encounter)
+        _ = await self.create_message(user, json.dumps(parsed_message), self.encounter)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': content
+                'message': parsed_message
             }
         )
 
