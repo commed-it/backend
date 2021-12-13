@@ -1,5 +1,6 @@
 import json
 import uuid
+import collections as c
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
@@ -8,6 +9,7 @@ from django.contrib.auth.models import User
 from chat.models import Message
 from enterprise.models import Enterprise
 from offer.models import Encounter
+
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -97,3 +99,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # message = { "message": content } already, so there is no need to parse it
         # Send message to WebSocket
         await self.send(text_data=json.dumps(message))
+
+
+def is_the_message_correct(a_dict: dict) -> bool:
+    a = c.defaultdict(lambda: lambda _:False)
+    a['message'] = lambda x: 'message' in x and type(x['message']) == str
+    a['formalOffer'] = lambda x: 'formalOffer' in x and type(x['formalOffer']) == int
+    return 'type' in a_dict and a[a_dict['type']](a_dict)
+
