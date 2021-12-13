@@ -1,3 +1,4 @@
+import json
 import os
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
@@ -181,17 +182,17 @@ class Command(BaseCommand):
         # Little chat
         msg3 = Message.objects.create(
             author=user_4,
-            msg="My firstborn child.",
+            msg=json.dumps({'type': 'message', 'message': 'My firstborn child'}),
             channel_context=e
         )
         msg2 = Message.objects.create(
             author=user_1,
-            msg="How much are you willing to pay?",
+            msg=json.dumps({'type': 'message', 'message':"How much are you willing to pay?"}),
             channel_context=e
         )
         msg1 = Message.objects.create(
             author=user_4,
-            msg="I want this.",
+            msg=json.dumps({'type': 'message', 'message': "I want this."}),
             channel_context=e
         )
 
