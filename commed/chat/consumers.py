@@ -57,7 +57,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     # Receive message from WebSocket
-    async def receive_json(self, content):
+    async def receive_json(self, content, **kwargs):
         """
         content = TextMessage {
         , user :: Int
@@ -69,6 +69,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Check
         user = await self.get_user_from_db(content['user'])
         _ = await self.create_message(user, content['text'], self.encounter)
+        parsed_message = json.loads(content["message"])
+        if 'user' not in parsed_message or 'text' not in parsed_message:
+            print("An error has occurred while parsing the data. Please check that the client is correct")
+            print(f"data={content}, parsed_message={parsed_message}")
+            return None
+        user = await self.get_user_from_db(parsed_message['user'])
+        _ = await self.create_message(user, content, self.encounter)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
