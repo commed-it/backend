@@ -1,10 +1,24 @@
 from rest_framework import serializers
-
+from rest_framework.fields import ImageField
+import base64, uuid
+from django.core.files.base import ContentFile
 from .models import Product, ProductImage, Tag, Category
-from .utils import category_similarity
+from .nlp import category_similarity
+
+class Base64ImageField(serializers.ImageField):
+
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith('data:image'):
+            # base64 encoded image - decode
+            format, imgstr = data.split(';base64,') # format ~= data:image/X,
+            ext = format.split('/')[-1] # guess file extension
+            id = uuid.uuid4()
+            data = ContentFile(base64.b64decode(imgstr), name = id.urn[9:] + '.' + ext)
+        return super(Base64ImageField, self).to_internal_value(data)
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
     class Meta:
         model = ProductImage
         fields = ("id", "name", "image")
@@ -27,7 +41,6 @@ def check_categories(validated_data):
             cat.tag_children.add(instance_tag)
     return instance_tag
 
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -44,14 +57,56 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ("id", "owner", "images", "description", "latitude", "longitude", "tag")
+        fields = ("id", "owner", "title", "images", "description", "latitude", "longitude", "tag")
+
 
     def create(self, validated_data):
         tags = [check_categories(tag) for tag in validated_data.pop('tag')]
-        productimages = validated_data.pop('productimage_set')
+        productimages = []
+        if validated_data.__contains__('productimage_set'):
+            productimages = validated_data.pop('productimage_set')
         instance = Product.objects.create(**validated_data)
         for image in productimages:
             image['product'] = instance
             ProductImage.objects.create(**image)
         instance.tag.set(tags)
         return instance
+
+    def update(self, instance, validated_data):
+        if validated_data.__contains__('tag'):
+            tags = [check_categories(tag) for tag in validated_data.pop('tag')]
+            instance.tag.set(tags)
+        productimages = []
+        if validated_data.__contains__('productimage_set'):
+            productimages = validated_data.pop('productimage_set')
+        for image in productimages:
+            image['product'] = instance
+            ProductImage.objects.create(**image)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        return instance
+
+class LocationSerializer(serializers.Serializer):
+    longitude = serializers.FloatField()
+    latitude = serializers.FloatField()
+    distance_km = serializers.FloatField()
+
+
+class SearchRequestBodySerializer(serializers.Serializer):
+    tags = TagSerializer(many=True, required=False)
+    location = LocationSerializer()
+
+    def validate(self, data):
+        if not data:
+            raise serializers.ValidationError("Must include at least one field on request body")
+        return data
+
+
+class RecomendationRequestBodySerializer(serializers.Serializer):
+    location = LocationSerializer()
+
+    def validate(self, data):
+        if not data:
+            raise serializers.ValidationError("Must include at least one field on request body")
+        return data
+

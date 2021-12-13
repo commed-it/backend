@@ -2,6 +2,9 @@ import datetime
 
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
+from unittest.mock import MagicMock
+from django.core.files.images import ImageFile
+
 
 from ..models import Enterprise
 
@@ -38,12 +41,18 @@ class ApiCRUDWorks(APITestCase):
             first_name="Macarroni",
             last_name="Diabola",
         )
+        profile_image = MagicMock(spec=ImageFile)
+        profile_image.name = 'ProfileImage.jpg'
+        banner_image = MagicMock(spec=ImageFile)
+        banner_image.name = 'BannerImage.jpg'
         Enterprise.objects.create(
             owner=user_1,
             NIF="12345678X",
             name="Restaurant Paco",
             contactInfo="paco@paco.com",
             description="<strong>This is a strong statement, lady</strong>",
+            profileImage=profile_image,
+            bannerImage=banner_image
         )
         Enterprise.objects.create(
             owner=user_2,
@@ -51,6 +60,8 @@ class ApiCRUDWorks(APITestCase):
             name="Restaurant PaNco",
             contactInfo="paco@paco.com",
             description="<strong>This is a strong statement, lady</strong>",
+            profileImage=profile_image,
+            bannerImage=banner_image
         )
 
     def test_list_enterprise(self):
@@ -58,6 +69,13 @@ class ApiCRUDWorks(APITestCase):
         Test the list type in CRUD.
         """
         response = self.client.get(BASE_URL)
+        self.assertEqual(200, response.status_code)
+
+    def test_user_enterprise(self):
+        """
+        Test the list type in CRUD.
+        """
+        response = self.client.get(BASE_URL+"user/1")
         self.assertEqual(200, response.status_code)
 
     def test_get_enterprise(self):
