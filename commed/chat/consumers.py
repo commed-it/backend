@@ -72,7 +72,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         user = await self.get_user_from_db(content['user'])
         _ = await self.create_message(user, content['text'], self.encounter)
         parsed_message = json.loads(content["message"])
-        if 'user' not in parsed_message or 'text' not in parsed_message:
+        if is_the_message_correct(parsed_message):
             print("An error has occurred while parsing the data. Please check that the client is correct")
             print(f"data={content}, parsed_message={parsed_message}")
             return None
