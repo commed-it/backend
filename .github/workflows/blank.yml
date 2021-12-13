@@ -36,6 +36,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Charge env vars and run tests
         run: |
-          set -o allexport; source commed/.env-sample; set +o allexport
-          cd commed/
-          python3 manage.py test
+          set -o allexport; source commed/.env-sample; set +o allexport 
+          cd commed/ 
+          python3 manage.py test 
