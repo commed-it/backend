@@ -65,7 +65,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Send message to room group
         # Check
-
         user = await self.get_user_from_db(content['user'])
         _ = await self.create_message(user, content['text'], self.encounter)
         await self.channel_layer.group_send(
