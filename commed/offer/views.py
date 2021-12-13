@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer
+from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
+    TheOtherEncounterSerializer
 from rest_framework import viewsets
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
@@ -27,7 +28,6 @@ class FormalOfferViewSet(viewsets.ModelViewSet):
     queryset = FormalOffer.objects.all()
     serializer_class = FormalOfferSerializer
     permission_classes = [AllowAny]
-
 
 
 def get_when_im_product_owner(user_id):
@@ -63,6 +63,7 @@ def get_when_im_product_owner_encounter(user_id):
         'theOtherClient': Enterprise.objects.get(owner=x.client)
     } for x in list_po)
 
+
 def get_when_im_client_encounter(user_id):
     im_the_client = Encounter.objects.filter(client__id=user_id)
     list_client = list(
@@ -73,6 +74,7 @@ def get_when_im_client_encounter(user_id):
         'theOtherClient': Enterprise.objects.get(owner=x.product.owner)
 
     } for x in list_client)
+
 
 class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
@@ -99,6 +101,7 @@ class ListChatsViewSet(viewsets.GenericViewSet):
         serializer = ListChatSerializer(res, many=True)
         return Response(serializer.data)
 
+
 class CreateIfNotExistsEncounter(viewsets.GenericViewSet):
     serializer_class = EncounterSerializer
     permission_classes = [AllowAny]
@@ -108,9 +111,59 @@ class CreateIfNotExistsEncounter(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            en = Encounter.objects.get(client=serializer.validated_data['client'], product=serializer.validated_data['product'])
+            en = Encounter.objects.get(client=serializer.validated_data['client'],
+                                       product=serializer.validated_data['product'])
             ser = self.get_serializer(en)
             return Response(ser.data)
         except Encounter.DoesNotExist:
             v = serializer.save()
             return Response(serializer.data)
+
+
+class UserFormalOffers(APIView):
+    """
+    Get all the Products owned by a user
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        encounters = []
+        formal_offers = []
+        user = request.path.split('/')[-1]
+        products = list(Product.objects.filter(owner=user))
+        for product in products:
+            encounters = encounters + list(Encounter.objects.filter(product=product.id))
+        for encounter in encounters:
+            formal_offers.append(FormalOffer.objects.get(encounterId=encounter))
+        serializer = FormalOfferSerializer(formal_offers, many=True)
+        return Response(serializer.data)
+
+
+class UserEncounter(APIView):
+    """Get some"""
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        encounters = []
+        response = []
+        user = request.path.split('/')[-1]
+        products = list(Product.objects.filter(owner=user))
+        for product in products:
+            encounters = encounters + list(Encounter.objects.filter(product=product.id))
+            for encounter in encounters:
+                client = Enterprise.objects.get(owner=encounter.client)
+                response.append({
+                    "id": encounter.id,
+                    "product": product,
+                    "client": client
+                })
+        encounters_client = Encounter.objects.filter(client=user)
+        client = Enterprise.objects.get(owner=user);
+        for encounter in encounters_client:
+            response.append({
+                "id": encounter.id,
+                "product": encounter.product,
+                "client": client
+            })
+        serializer = TheOtherEncounterSerializer(response, many=True)
+        return Response(serializer.data)

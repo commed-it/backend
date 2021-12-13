@@ -18,6 +18,19 @@ class EncounterSerializer(serializers.ModelSerializer):
         fields = ('id', 'client', 'product')
 
 
+class TheOtherEncounterSerializer(serializers.ModelSerializer):
+    """
+    client = EnterpriseSerializer()
+    product = ProductSerializer()
+    """
+    client = EnterpriseSerializer()
+    product = ProductSerializer()
+
+    class Meta:
+        model = Encounter
+        fields = ('id', 'client', 'product')
+
+
 class FormalOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormalOffer
