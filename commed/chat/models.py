@@ -8,7 +8,7 @@ class Message(models.Model):
     """
     Message Model. It stores the messages in the chat.
     """
-    # author = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE)
     channel_context = models.ForeignKey(Encounter, primary_key=False, on_delete=models.CASCADE, editable=False, db_index=True)
     msg = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)

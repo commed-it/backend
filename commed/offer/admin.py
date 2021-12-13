@@ -12,5 +12,6 @@ class EncounterAdmin(admin.ModelAdmin):
 class FormalOfferAdmin(admin.ModelAdmin):
     pass
 
+
 admin.site.register(Encounter, EncounterAdmin)
 admin.site.register(FormalOffer, FormalOfferAdmin)

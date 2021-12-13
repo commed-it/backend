@@ -45,9 +45,8 @@ session. Please don't use it.
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
+            console.log(message)
+            chatSocket.send(message);
             messageInputDom.value = '';
         };
     </script>

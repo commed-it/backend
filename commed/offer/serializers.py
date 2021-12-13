@@ -3,12 +3,32 @@ from rest_framework import serializers
 from enterprise.serializers import EnterpriseSerializer
 from product.serializers import ProductSerializer
 from .models import Encounter, FormalOffer
+from enterprise.serializers import EnterpriseSerializer
+from product.serializers import ProductSerializer
 
 
 class EncounterSerializer(serializers.ModelSerializer):
+    """
+    client = EnterpriseSerializer()
+    product = ProductSerializer()
+    """
+
     class Meta:
         model = Encounter
-        fields = '__all__'
+        fields = ('id', 'client', 'product')
+
+
+class TheOtherEncounterSerializer(serializers.ModelSerializer):
+    """
+    client = EnterpriseSerializer()
+    product = ProductSerializer()
+    """
+    client = EnterpriseSerializer()
+    product = ProductSerializer()
+
+    class Meta:
+        model = Encounter
+        fields = ('id', 'client', 'product')
 
 
 class FormalOfferSerializer(serializers.ModelSerializer):
