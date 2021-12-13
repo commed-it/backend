@@ -70,6 +70,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         # Send message to room group
         # Check
+        print(content)
         parsed_message = json.loads(content["message"])
         if not is_the_message_correct(parsed_message):
             print("An error has occurred while parsing the data. Please check that the client is correct")

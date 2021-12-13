@@ -180,19 +180,21 @@ class Command(BaseCommand):
             product=product1
         )
         # Little chat
-        msg3 = Message.objects.create(
+
+
+        msg1 = Message.objects.create(
             author=user_4,
-            msg=json.dumps({'type': 'message', 'message': 'My firstborn child'}),
+            msg=json.dumps({'type': 'message', 'message': "I want this."}),
             channel_context=e
         )
         msg2 = Message.objects.create(
             author=user_1,
-            msg=json.dumps({'type': 'message', 'message':"How much are you willing to pay?"}),
+            msg=json.dumps({'type': 'message', 'message': "How much are you willing to pay?"}),
             channel_context=e
         )
-        msg1 = Message.objects.create(
+        msg3 = Message.objects.create(
             author=user_4,
-            msg=json.dumps({'type': 'message', 'message': "I want this."}),
+            msg=json.dumps({'type': 'message', 'message': 'My firstborn child'}),
             channel_context=e
         )
 
