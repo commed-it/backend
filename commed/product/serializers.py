@@ -1,10 +1,24 @@
 from rest_framework import serializers
-
+from rest_framework.fields import ImageField
+import base64, uuid
+from django.core.files.base import ContentFile
 from .models import Product, ProductImage, Tag, Category
 from .nlp import category_similarity
 
+class Base64ImageField(serializers.ImageField):
+
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith('data:image'):
+            # base64 encoded image - decode
+            format, imgstr = data.split(';base64,') # format ~= data:image/X,
+            ext = format.split('/')[-1] # guess file extension
+            id = uuid.uuid4()
+            data = ContentFile(base64.b64decode(imgstr), name = id.urn[9:] + '.' + ext)
+        return super(Base64ImageField, self).to_internal_value(data)
+
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
     class Meta:
         model = ProductImage
         fields = ("id", "name", "image")
@@ -27,7 +41,6 @@ def check_categories(validated_data):
             cat.tag_children.add(instance_tag)
     return instance_tag
 
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -45,6 +58,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ("id", "owner", "title", "images", "description", "latitude", "longitude", "tag")
+
 
     def create(self, validated_data):
         tags = [check_categories(tag) for tag in validated_data.pop('tag')]
@@ -95,3 +109,4 @@ class RecomendationRequestBodySerializer(serializers.Serializer):
         if not data:
             raise serializers.ValidationError("Must include at least one field on request body")
         return data
+
