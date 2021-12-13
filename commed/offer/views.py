@@ -140,7 +140,7 @@ class UserFormalOffers(APIView):
 
 
 class UserEncounter(APIView):
-    """Get some"""
+    """Manteined for legacy reasons. """
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
