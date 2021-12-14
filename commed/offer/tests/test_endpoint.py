@@ -189,7 +189,7 @@ class ApiCRUDWorks(APITestCase):
         )
         self.assertEqual(201, response.status_code)
 
-    """def test_update_formal_offer(self):
+    def test_update_formal_offer(self):
         file_mock = MagicMock(spec=File)
         file_mock.name = 'test.pdf'
         response = self.client.put(
@@ -201,7 +201,7 @@ class ApiCRUDWorks(APITestCase):
                 "pdf": file_mock
             },
         )
-        self.assertEqual(200, response.status_code)"""
+        self.assertEqual(200, response.status_code)
 
     def test_patch_formal_offer(self):
         response = self.client.patch(
