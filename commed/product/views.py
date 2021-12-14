@@ -70,9 +70,6 @@ class UserProducts(APIView):
         return Response(serializer.data)
 
 
-#
-# Create your views here.
-
 class ProductImageViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for interacting with Products

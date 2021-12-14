@@ -9,7 +9,7 @@ class Enterprise(models.Model):
     NIF = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=128)
     contactInfo = models.CharField(max_length=256)
-    description = models.TextField(help_text='Description about the entity. It can be provided HTML')
+    description = models.TextField(help_text='Description about the entity. It can be provided HTML', default = "")
     profileImage = models.ImageField(upload_to='images/', default="profile.png")
     bannerImage = models.ImageField(upload_to='images/', default="banner.jpg")
 

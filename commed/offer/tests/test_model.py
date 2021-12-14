@@ -1,12 +1,11 @@
-import datetime
-
 from unittest.mock import MagicMock
+
+from django.contrib.auth.models import User
 from django.core.files import File
 from django.test import TestCase
-from django.contrib.auth.models import User
+
 from offer.models import Encounter, FormalOffer
 from product.models import Product
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class EncounterTestCase(TestCase):
@@ -53,7 +52,7 @@ class EncounterTestCase(TestCase):
             encounterId=e,
             version=2,
             contract="asdfasdf",
-            signedPdf=file_mock
+            pdf=file_mock
         )
 
     def test_content(self):
@@ -66,4 +65,4 @@ class EncounterTestCase(TestCase):
         formal_offer = FormalOffer.objects.get(id=1)
         self.assertEqual(2, formal_offer.version)
         self.assertEqual("asdfasdf", formal_offer.contract)
-        self.assertIn("test", formal_offer.signedPdf.name)
+        self.assertIn("test", formal_offer.pdf.name)

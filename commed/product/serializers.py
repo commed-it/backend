@@ -76,6 +76,7 @@ class ProductSerializer(serializers.ModelSerializer):
         print(instance)
         if validated_data.__contains__('tag'):
             tags = [check_categories(tag) for tag in validated_data.pop('tag')]
+            instance.tag.set(tags)
         productimages = []
         if validated_data.__contains__('productimage_set'):
             productimages = validated_data.pop('productimage_set')
@@ -83,7 +84,9 @@ class ProductSerializer(serializers.ModelSerializer):
         for image in productimages:
             image['product'] = instance
             ProductImage.objects.create(**image)
-        instance.tag.set(tags)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
         return instance
 
 

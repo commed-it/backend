@@ -7,5 +7,5 @@ router = SimpleRouter()
 router.register("messages", views.MessageViewSet, basename="messages")
 
 urlpatterns = [path('<str:room_name>/', views.room, name='room'),
-               path('encounter/<str:encounter_uuid>/', include(router.urls), name='messages')
+               path('encounter/<str:encounter_uuid>/', include(router.urls), name='messages'),
                ]
