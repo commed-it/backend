@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView, GenericAPIView
+
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
     TheOtherEncounterSerializer
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
 from .models import Encounter
@@ -102,12 +104,12 @@ class ListChatsViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
-class CreateIfNotExistsEncounter(viewsets.GenericViewSet):
+class CreateIfNotExistsEncounter(generics.CreateAPIView):
     serializer_class = EncounterSerializer
+    queryset = Encounter.objects.all()
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
-        """ha"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
