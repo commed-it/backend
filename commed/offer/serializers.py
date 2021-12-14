@@ -58,14 +58,13 @@ class FormalOfferSerializer(serializers.ModelSerializer):
             validated_data['version'] = 0
             return FormalOffer.objects.create(**validated_data)
 
-    def update(self, validated_data):
-        try:
-            last_fo = FormalOffer.objects.filter(encounterId = validated_data.encounterId).last()
-            validated_data['version'] = last_fo.version + 1
-            return FormalOffer.objects.create(**validated_data)
-        except FormalOffer.DoesNotExist:
-            validated_data['version'] = 0
-            return FormalOffer.objects.create(**validated_data)
+    def update(self, instance, validated_data):
+        instance.pk = None
+        instance.version += 1
+        for k, v in validated_data.items():
+            instance.__setattr__(k, v)
+        instance.save()
+        return instance 
 
 class ListChatSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
