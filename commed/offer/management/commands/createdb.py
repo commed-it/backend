@@ -9,7 +9,6 @@ from product.models import Product, Category, Tag, ProductImage
 from enterprise.models import Enterprise
 from unittest.mock import MagicMock
 from django.core.files import File
-from media import images
 
 class Command(BaseCommand):
     help = "Adds things to the database"
