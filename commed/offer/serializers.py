@@ -18,6 +18,7 @@ class Base64Pdf(serializers.FileField):
             data = ContentFile(base64.b64decode(imgstr), name = id.urn[9:] + '.' + ext)
         return super(Base64Pdf, self).to_internal_value(data)
 
+
 class EncounterSerializer(serializers.ModelSerializer):
     """
     client = EnterpriseSerializer()
@@ -28,6 +29,11 @@ class EncounterSerializer(serializers.ModelSerializer):
         model = Encounter
         fields = ('id', 'client', 'product')
 
+
+class CreateIfNotExistsSerializer(serializers.Serializer):
+    product = ProductSerializer()
+    encounter = EncounterSerializer()
+    enterprise = EnterpriseSerializer()
 
 class TheOtherEncounterSerializer(serializers.ModelSerializer):
     """
