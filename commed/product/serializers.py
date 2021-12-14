@@ -84,6 +84,7 @@ class ProductSerializer(serializers.ModelSerializer):
             ProductImage.objects.create(**image)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+        instance.save()
         return instance
 
 class LocationSerializer(serializers.Serializer):
