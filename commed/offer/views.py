@@ -125,10 +125,10 @@ class CreateIfNotExistsEncounter(generics.CreateAPIView):
             return Response(ser.data)
         except Encounter.DoesNotExist:
             v = serializer.save()
-            p2 = Product.objects.get(pk=serializer.validated_data['product'])
+            p2 = serializer.validated_data['product']
             data = {
                 'product': p2,
-                'encounter': v.data,
+                'encounter': v,
                 'enterprise': Enterprise.objects.get(owner=p2.owner)
             }
             ser = CreateIfNotExistsSerializer(data)
