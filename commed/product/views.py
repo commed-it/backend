@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .latlon import get_close_products
 from .models import Product, ProductImage
 from .nlp import search_by_tag
-from .serializers import ProductSerializer, SearchRequestBodySerializer, RecomendationRequestBodySerializer
+from .serializers import ProductSerializer, ProductImageSerializer, SearchRequestBodySerializer, RecomendationRequestBodySerializer
 
 
 #
@@ -69,3 +69,11 @@ class UserProducts(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    """
+    A simple ViewSet for interacting with Products
+    """
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [AllowAny]

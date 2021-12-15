@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView, GenericAPIView
+
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
-    TheOtherEncounterSerializer
-from rest_framework import viewsets
+    TheOtherEncounterSerializer, CreateIfNotExistsSerializer
+from rest_framework import viewsets, generics
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
 from .models import Encounter
@@ -102,22 +104,35 @@ class ListChatsViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
-class CreateIfNotExistsEncounter(viewsets.GenericViewSet):
+class CreateIfNotExistsEncounter(generics.CreateAPIView):
     serializer_class = EncounterSerializer
+    queryset = Encounter.objects.all()
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
-        """ha"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
             en = Encounter.objects.get(client=serializer.validated_data['client'],
                                        product=serializer.validated_data['product'])
-            ser = self.get_serializer(en)
+            p1 = serializer.validated_data['product']
+            data = {
+                'product': p1,
+                'encounter': en,
+                'enterprise': Enterprise.objects.get(owner=p1.owner)
+            }
+            ser = CreateIfNotExistsSerializer(data)
             return Response(ser.data)
         except Encounter.DoesNotExist:
             v = serializer.save()
-            return Response(serializer.data)
+            p2 = serializer.validated_data['product']
+            data = {
+                'product': p2,
+                'encounter': v,
+                'enterprise': Enterprise.objects.get(owner=p2.owner)
+            }
+            ser = CreateIfNotExistsSerializer(data)
+            return Response(ser.data)
 
 
 class UserFormalOffers(APIView):
