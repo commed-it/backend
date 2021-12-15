@@ -183,17 +183,17 @@ class Command(BaseCommand):
 
         msg1 = Message.objects.create(
             author=user_4,
-            msg=json.dumps({'type': 'message', 'message': "I want this."}),
+            msg=json.dumps({'user': 4, 'type': 'message', 'message': "I want this."}),
             channel_context=e
         )
         msg2 = Message.objects.create(
             author=user_1,
-            msg=json.dumps({'type': 'message', 'message': "How much are you willing to pay?"}),
+            msg=json.dumps({'user': 1,'type': 'message', 'message': "How much are you willing to pay?"}),
             channel_context=e
         )
         msg3 = Message.objects.create(
             author=user_4,
-            msg=json.dumps({'type': 'message', 'message': 'My firstborn child'}),
+            msg=json.dumps({'user': 4, 'type': 'message', 'message': 'My firstborn child'}),
             channel_context=e
         )
 
@@ -237,7 +237,8 @@ class Command(BaseCommand):
                         " perimeter console operators, alarm response, and specialized client requested services."
                         "Securitas serves a wide range of customers in a variety of industries and customer segments.",
             profileImage="securityProfile.png",
-            bannerImage="securityBanner.jpg"
+            bannerImage="securityBanner.jpg",
+            location="4455 Landing Lange, APT 4 Louisville, KY 40018-1234"
         )
         Enterprise.objects.create(
             owner=user_2,
@@ -249,7 +250,8 @@ class Command(BaseCommand):
                         " apartments,"
                         " houses, buildings, hotels and all kinds of personal spaces",
             profileImage="cleanProfile.png",
-            bannerImage="cleanBanner.jpg"
+            bannerImage="cleanBanner.jpg",
+            location="90210 Broadway Blvd. Nashville, TN 37011-5678"
         )
         Enterprise.objects.create(
             owner=user_3,
@@ -265,7 +267,8 @@ class Command(BaseCommand):
                         "growing, organic ... The savings by reducing the margin of brokering can thus be invested in "
                         "higher quality agriculture and a fairer price for all.",
             profileImage="fruitProfile.png",
-            bannerImage="fruitBanner.jpg"
+            bannerImage="fruitBanner.jpg",
+            location = "SGT 6543 N 9th Street APO, AA 33608-1234"
         )
         Enterprise.objects.create(
             owner=user_4,
@@ -275,5 +278,6 @@ class Command(BaseCommand):
             description="Our reputation is rooted in customer service. We specialize in offering high-quality, energy efficient kitchen and"
                         " laundry appliances. Choose our products and appliances and trust they'll handle your family's chores with care. ",
             profileImage="applianceProfile.png",
-            bannerImage="applianceBanner.jpg"
+            bannerImage="applianceBanner.jpg",
+            location = "4455 Landing Lange, APT 4, Nashville, TN 37011-5678"
         )

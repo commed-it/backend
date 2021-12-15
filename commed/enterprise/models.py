@@ -12,6 +12,7 @@ class Enterprise(models.Model):
     description = models.TextField(help_text='Description about the entity. It can be provided HTML', default = "")
     profileImage = models.ImageField(upload_to='images/', default="profile.png")
     bannerImage = models.ImageField(upload_to='images/', default="banner.jpg")
+    location = models.CharField(max_length=100, default="No location")
 
     def __str__(self):
         return f"""Enterprise(owner={self.owner}, NIF='{self.NIF}',
