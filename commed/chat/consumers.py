@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 
 from chat.models import Message
 from enterprise.models import Enterprise
-from offer.models import Encounter
-
+from offer.models import Encounter, FormalOffer
+from offer.serializers import FormalOfferSerializer
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -41,6 +41,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     def get_encounter_from_db(self, uuid_room):
         return Encounter.objects.get(id=uuid_room)
 
+    @database_sync_to_async
+    def get_formal_offer(self, formal_offer_id):
+        fo = FormalOffer.objects.get(pk=formal_offer_id)
+        ser = FormalOfferSerializer(fo)
+        data = ser.data
+        data['encounterId'] = str(ser.data['encounterId'])
+        return data
+
     async def _create_connection(self):
         # Join room group
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -67,6 +75,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         } | E
 
         {"user": 1, "type": "message", "message": "more messages"}
+        {"user": 1, "type": "formalOffer", "formalOffer": 1}
         """
         # Send message to room group
         # Check
@@ -75,15 +84,21 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             print("An error has occurred while parsing the data. Please check that the client is correct")
             print(f"data={content}, parsed_message={parsed_message}")
             return None
-        user = await self.get_user_from_db(parsed_message['user'])
-        _ = await self.create_message(user, json.dumps(parsed_message), self.encounter)
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': parsed_message
-            }
-        )
+        try:
+            if 'formalOffer' in parsed_message:
+                parsed_message['formalOffer'] = await self.get_formal_offer(parsed_message['formalOffer'])
+            user = await self.get_user_from_db(parsed_message['user'])
+            _ = await self.create_message(user, json.dumps(parsed_message), self.encounter)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': parsed_message
+                }
+            )
+        except FormalOffer.DoesNotExist:
+            # i don't care if it doesn't exist
+            pass
 
     @database_sync_to_async
     def create_message(self, sender: User, msg: str, context: Encounter):
