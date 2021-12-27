@@ -73,7 +73,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        print(instance)
         if validated_data.__contains__('tag'):
             tags = [check_categories(tag) for tag in validated_data.pop('tag')]
             instance.tag.set(tags)
