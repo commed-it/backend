@@ -193,10 +193,14 @@ class Command(BaseCommand):
         )
         msg3 = Message.objects.create(
             author=user_4,
-            msg=json.dumps({'user': 4, 'type': 'message', 'message': 'My firstborn child'}),
+            msg=json.dumps({'user': 4, 'type': 'message', 'message': 'What about for free?'}),
             channel_context=e
         )
-
+        msg2 = Message.objects.create(
+            author=user_1,
+            msg=json.dumps({'user': 1,'type': 'message', 'message': "Deal!"}),
+            channel_context=e
+        )
 
         e2 = Encounter.objects.create(
             client=user_4,
