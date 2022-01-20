@@ -12,8 +12,10 @@ application = create_application()
 if __name__ == '__main__':
     print("Get debug paramenter")
     debug = int(os.getenv('DJANGO_DEBUG')) == 1
+    print(f'debug: {debug}')
     if debug:
         uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0', reload=True)
     else:
-        print("Starting server: ")
-        uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0')
+        port = int(os.getenv('PORT', os.getenv('DJANGO_PORT')))
+        print(f"Starting server on: {port}")
+        uvicorn.run('server:application', port=port, host='0.0.0.0')
