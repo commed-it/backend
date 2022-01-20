@@ -17,5 +17,6 @@ if __name__ == '__main__':
         uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0', reload=True)
     else:
         port = int(os.getenv('PORT', os.getenv('DJANGO_PORT')))
+        host = os.getenv('HOST', '0.0.0.0')
         print(f"Starting server on: {port}")
-        uvicorn.run('server:application', port=port, host='0.0.0.0')
+        uvicorn.run('server:application', port=port, host=host)
