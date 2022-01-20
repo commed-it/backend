@@ -10,8 +10,10 @@ django.setup()
 application = create_application()
 
 if __name__ == '__main__':
+    print("Get debug paramenter")
     debug = int(os.getenv('DJANGO_DEBUG')) == 1
     if debug:
         uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0', reload=True)
     else:
+        print("Starting server: ")
         uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0')
