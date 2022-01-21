@@ -14,20 +14,20 @@ if __name__ == '__main__':
     print("Get debug paramenter")
     debug = int(os.getenv('DJANGO_DEBUG')) == 1
     print(f'debug: {debug}')
+    port = int(os.getenv('PORT', os.getenv('DJANGO_PORT')))
+    host = os.getenv('HOST', '0.0.0.0')
+    postgres_url = os.getenv('DATABASE_URL', False)
+    if postgres_url:
+        matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
+        m = matcher.match(postgres_url)
+        print(m.groups())
+        os.environ['POSTGRES_USER'] = m[0]
+        os.environ['POSTGRES_PASSWORD'] = m[1]
+        os.environ['POSTGRES_HOST'] = m[3]
+        os.environ['POSTGRES_PORT'] = m[4]
+        os.environ['POSTGRES_DBNAME'] = m[5]
     if debug:
-        uvicorn.run('server:application', port=int(os.getenv('DJANGO_PORT')), host='0.0.0.0', reload=True)
+        uvicorn.run('server:application', port=port, host=host, reload=True)
     else:
-        port = int(os.getenv('PORT', os.getenv('DJANGO_PORT')))
-        host = os.getenv('HOST', '0.0.0.0')
-        postgres_url = os.getenv('DATABASE_URL', False)
-        if postgres_url:
-            matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
-            m = matcher.match(postgres_url)
-            print(m.groups())
-            os.environ['POSTGRES_USER'] = m[0]
-            os.environ['POSTGRES_PASSWORD'] = m[1]
-            os.environ['POSTGRES_HOST'] = m[3]
-            os.environ['POSTGRES_PORT'] = m[4]
-            os.environ['POSTGRES_DBNAME'] = m[5]
         print(f"Starting server on: {port}")
         uvicorn.run('server:application', port=port, host=host)
