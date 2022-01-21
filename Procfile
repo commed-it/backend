@@ -1,1 +1,1 @@
-web: sh commed/docker-web-script.sh
+web: sh commed/heroku-script.sh
