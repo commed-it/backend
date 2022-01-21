@@ -1,1 +1,1 @@
-web: python3 commed/server.py
+web: sh commed/docker-web-script.sh
