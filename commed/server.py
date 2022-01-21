@@ -20,7 +20,7 @@ if __name__ == '__main__':
     if postgres_url:
         matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
         match = matcher.match(postgres_url)
-        m = m.groups()
+        m = match.groups()
         os.environ['POSTGRES_USER'] = m[0]
         os.environ['POSTGRES_PASSWORD'] = m[1]
         os.environ['POSTGRES_HOST'] = m[3]
