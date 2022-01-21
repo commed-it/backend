@@ -23,9 +23,9 @@ if __name__ == '__main__':
         m = match.groups()
         os.environ['POSTGRES_USER'] = m[0]
         os.environ['POSTGRES_PASSWORD'] = m[1]
-        os.environ['POSTGRES_HOST'] = m[3]
-        os.environ['POSTGRES_PORT'] = m[4]
-        os.environ['POSTGRES_DBNAME'] = m[5]
+        os.environ['POSTGRES_HOST'] = m[2]
+        os.environ['POSTGRES_PORT'] = m[3]
+        os.environ['POSTGRES_DBNAME'] = m[4]
     if debug:
         uvicorn.run('server:application', port=port, host=host, reload=True)
     else:
