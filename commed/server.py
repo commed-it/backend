@@ -16,15 +16,6 @@ if __name__ == '__main__':
     print(f'debug: {debug}')
     port = int(os.getenv('PORT', os.getenv('DJANGO_PORT')))
     host = os.getenv('HOST', '0.0.0.0')
-    postgres_url = os.getenv('DATABASE_URL', False)
-    matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
-    match = matcher.match(postgres_url)
-    m = match.groups()
-    os.environ['POSTGRES_USER'] = m[0]
-    os.environ['POSTGRES_PASSWORD'] = m[1]
-    os.environ['POSTGRES_HOST'] = m[2]
-    os.environ['POSTGRES_PORT'] = m[3]
-    os.environ['POSTGRES_DATABASE'] = m[4]
     if debug:
         uvicorn.run('server:application', port=port, host=host, reload=True)
     else:
