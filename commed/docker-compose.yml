@@ -20,6 +20,8 @@ services:
   database:
     image: postgres:14-alpine
     container_name: commed-database
+    ports:
+      - ${POSTGRES_PORT}
     env_file:
       - .env
     volumes:
