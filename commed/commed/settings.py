@@ -12,10 +12,29 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+import re
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def update_variables_for_heroku():
+    """
+    Updates variables for heroku without creating global variables
+    """
+    postgres_url = os.getenv('DATABASE_URL', False)
+    if postgres_url:
+        matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
+        match = matcher.match(postgres_url)
+        m = match.groups()
+        os.environ['POSTGRES_USER'] = m[0]
+        os.environ['POSTGRES_PASSWORD'] = m[1]
+        os.environ['POSTGRES_HOST'] = m[2]
+        os.environ['POSTGRES_PORT'] = m[3]
+        os.environ['POSTGRES_DATABASE'] = m[4]
+
+# this doesn't create unwanted global variables
+update_variables_for_heroku()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
