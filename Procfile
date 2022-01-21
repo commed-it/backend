@@ -1,1 +1,1 @@
-web: sh commed/heroku-script.sh
+web: python3 commed/server.py
