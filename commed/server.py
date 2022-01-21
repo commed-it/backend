@@ -19,8 +19,8 @@ if __name__ == '__main__':
     postgres_url = os.getenv('DATABASE_URL', False)
     if postgres_url:
         matcher = re.compile(r'postgres://([\w]+):([\w]+)@([\w\-.]+):([\d]+)/([\w]+)')
-        m = matcher.match(postgres_url)
-        print(m.groups())
+        match = matcher.match(postgres_url)
+        m = m.groups()
         os.environ['POSTGRES_USER'] = m[0]
         os.environ['POSTGRES_PASSWORD'] = m[1]
         os.environ['POSTGRES_HOST'] = m[3]
