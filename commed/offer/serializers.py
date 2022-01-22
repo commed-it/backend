@@ -82,3 +82,10 @@ class FormalOfferEncounterSerializer(serializers.Serializer):
     formalOffer = FormalOfferSerializer()
     product = ProductSerializer()
     theOtherClient = EnterpriseSerializer()
+
+class FormalOfferEncounterSerializerFull(serializers.Serializer):
+    encounter = EncounterSerializer()
+    formalOffer = FormalOfferSerializer()
+    product = ProductSerializer()
+    client = EnterpriseSerializer()
+    owner = EnterpriseSerializer()
