@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
 
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
-    TheOtherEncounterSerializer, CreateIfNotExistsSerializer
+    TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull
 from rest_framework import viewsets, generics
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
@@ -90,6 +90,22 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
         serializer = FormalOfferEncounterSerializer(res, many=True)
         return Response(serializer.data)
 
+class FormalOfferFromFOViewSet(viewsets.GenericViewSet):
+    serializer_class = FormalOfferSerializer
+    permission_classes = [AllowAny]
+
+    def list(self, *args, **kwargs):
+        fo_id = kwargs['fo_id']
+        fo = FormalOffer.objects.get(pk=fo_id)
+        res = {
+            'owner' : Enterprise.objects.get(owner=fo.encounterId.product.owner),
+            'encounter': fo.encounterId,
+            'formalOffer': fo,
+            'product': fo.encounterId.product,
+            'client': Enterprise.objects.get(owner=fo.encounterId.client)
+        }
+        serializer = FormalOfferEncounterSerializerFull(res)
+        return Response(serializer.data)
 
 class ListChatsViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
