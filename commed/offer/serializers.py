@@ -56,21 +56,21 @@ class FormalOfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FormalOffer
-        fields = ('encounterId', 'contract', 'pdf', 'state', 'version')
+        fields = '__all__'
 
     def create(self, validated_data):
-        try:
-            last_fo = FormalOffer.objects.filter(encounterId=validated_data["encounterId"]).last()
+        last_fo = FormalOffer.objects.filter(encounterId=validated_data["encounterId"]).last()
+        if last_fo: 
             validated_data['version'] = last_fo.version + 1
             return FormalOffer.objects.create(**validated_data)
-        except FormalOffer.DoesNotExist:
+        else:
             validated_data['version'] = 0
             return FormalOffer.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.pk = None
         instance.version += 1
-        if validated_data['version']:
+        if 'version' in validated_data.keys():
             del validated_data['version']
         for k, v in validated_data.items():
             instance.__setattr__(k, v)

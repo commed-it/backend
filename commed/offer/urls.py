@@ -16,7 +16,7 @@ urlpatterns = router.urls + \
         path('encounter/create-if-not-exists', CreateIfNotExistsEncounter.as_view()),
         path('encounter/user/<int:user_id>', UserEncounter.as_view()),
         path('formaloffer/user/<int:user_id>', UserFormalOffers.as_view()),
-        path('formaloffer/confirmate-sign', send_confirmation_formal_offer_email)
+        path('formaloffer/confirm-sign', send_confirmation_formal_offer_email)
     ]
 
 
