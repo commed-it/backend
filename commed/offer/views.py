@@ -1,5 +1,11 @@
+import os
+
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
 
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
     TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull
@@ -90,6 +96,7 @@ class FormalOfferFromUserViewSet(viewsets.GenericViewSet):
         serializer = FormalOfferEncounterSerializer(res, many=True)
         return Response(serializer.data)
 
+
 class FormalOfferFromFOViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
     permission_classes = [AllowAny]
@@ -98,7 +105,7 @@ class FormalOfferFromFOViewSet(viewsets.GenericViewSet):
         fo_id = kwargs['fo_id']
         fo = FormalOffer.objects.get(pk=fo_id)
         res = {
-            'owner' : Enterprise.objects.get(owner=fo.encounterId.product.owner),
+            'owner': Enterprise.objects.get(owner=fo.encounterId.product.owner),
             'encounter': fo.encounterId,
             'formalOffer': fo,
             'product': fo.encounterId.product,
@@ -106,6 +113,7 @@ class FormalOfferFromFOViewSet(viewsets.GenericViewSet):
         }
         serializer = FormalOfferEncounterSerializerFull(res)
         return Response(serializer.data)
+
 
 class ListChatsViewSet(viewsets.GenericViewSet):
     serializer_class = FormalOfferSerializer
@@ -198,3 +206,33 @@ class UserEncounter(APIView):
             })
         serializer = TheOtherEncounterSerializer(response, many=True)
         return Response(serializer.data)
+
+
+@api_view(['POST'])
+def send_confirmation_formal_offer_email(request, *args, **kwargs):
+    """
+    Sends an email with a confirmation for the formal offer.
+    """
+    if request.method == 'POST':
+        user: User = request.user
+        email = user.email
+        send_mail(
+            subject = '[ Commed ]: Confirmation of signing a formal offer',
+            message = "",
+            from_email = os.getenv('EMAIL_HOST_USER'),
+            recipient_list = [email],
+            html_message = """
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>This should contain a longer description</h1>
+                    <p>This should be changed to have a button</p>
+                <body>
+            </html>
+            """
+        )
+        return JsonResponse({'message': 'Email sent correctly'}, status=204)
+    else:
+        return JsonResponse({'message': 'method not allowed'}, status=405)
+

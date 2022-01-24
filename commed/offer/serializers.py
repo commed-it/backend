@@ -7,15 +7,16 @@ from .models import Encounter, FormalOffer
 from enterprise.serializers import EnterpriseSerializer
 from product.serializers import ProductSerializer
 
+
 class Base64Pdf(serializers.FileField):
 
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:application/pdf'):
             # base64 encoded image - decode
-            format, imgstr = data.split(';base64,') # format ~= data:image/X,
-            ext = format.split('/')[-1] # guess file extension
+            format, imgstr = data.split(';base64,')  # format ~= data:image/X,
+            ext = format.split('/')[-1]  # guess file extension
             id = uuid.uuid4()
-            data = ContentFile(base64.b64decode(imgstr), name = id.urn[9:] + '.' + ext)
+            data = ContentFile(base64.b64decode(imgstr), name=id.urn[9:] + '.' + ext)
         return super(Base64Pdf, self).to_internal_value(data)
 
 
@@ -35,6 +36,7 @@ class CreateIfNotExistsSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
     enterprise = EnterpriseSerializer()
 
+
 class TheOtherEncounterSerializer(serializers.ModelSerializer):
     """
     client = EnterpriseSerializer()
@@ -49,39 +51,45 @@ class TheOtherEncounterSerializer(serializers.ModelSerializer):
 
 
 class FormalOfferSerializer(serializers.ModelSerializer):
-    version = serializers.IntegerField(required = False)
+    version = serializers.IntegerField(required=False)
     pdf = Base64Pdf()
+
     class Meta:
         model = FormalOffer
         fields = '__all__'
 
     def create(self, validated_data):
-        try:
-            last_fo = FormalOffer.objects.filter(encounterId = validated_data["encounterId"]).last()
+        last_fo = FormalOffer.objects.filter(encounterId=validated_data["encounterId"]).last()
+        if last_fo: 
             validated_data['version'] = last_fo.version + 1
             return FormalOffer.objects.create(**validated_data)
-        except FormalOffer.DoesNotExist:
+        else:
             validated_data['version'] = 0
             return FormalOffer.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.pk = None
         instance.version += 1
+        if 'version' in validated_data.keys():
+            del validated_data['version']
         for k, v in validated_data.items():
             instance.__setattr__(k, v)
         instance.save()
-        return instance 
+        return instance
+
 
 class ListChatSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
     product = ProductSerializer()
     theOtherClient = EnterpriseSerializer()
 
+
 class FormalOfferEncounterSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
     formalOffer = FormalOfferSerializer()
     product = ProductSerializer()
     theOtherClient = EnterpriseSerializer()
+
 
 class FormalOfferEncounterSerializerFull(serializers.Serializer):
     encounter = EncounterSerializer()
