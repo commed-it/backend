@@ -217,9 +217,9 @@ class StartSignatureView(APIView):
         Sends an email with a confirmation for the formal offer.
         """
         request = self.serializer_class(data=request.data)
-        user: User = request.user
+        user: User = self.request.user
         email = user.email
-        port = ':443' if os.getenv("PORT")  else (':' + os.getenv("DJANGO_OPEN_PORT"))
+        port = ':443' if os.getenv("PORT")  else (':' + os.getenv("OPEN_PORT"))
         send_mail(
             subject = '[ Commed ]: Confirmation of signing a formal offer',
             message = "",
