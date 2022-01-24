@@ -13,7 +13,7 @@ def get_nlp():
     try:
         return spacy.load("commed/en_core_web_md")
     except OSError:
-        spacy.load("en_core_web_md")
+        return spacy.load("en_core_web_md")
 
 
 def category_similarity(tag_name):
