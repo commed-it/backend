@@ -1,5 +1,5 @@
 from rest_framework.routers import SimpleRouter
-from .views import EncounterViewSet
+from .views import EncounterViewSet, send_confirmation_formal_offer_email
 from .views import FormalOfferFromFOViewSet, FormalOfferViewSet, FormalOfferFromUserViewSet, ListChatsViewSet, CreateIfNotExistsEncounter, UserFormalOffers, UserEncounter
 from django.urls import path
 
@@ -16,6 +16,7 @@ urlpatterns = router.urls + \
         path('encounter/create-if-not-exists', CreateIfNotExistsEncounter.as_view()),
         path('encounter/user/<int:user_id>', UserEncounter.as_view()),
         path('formaloffer/user/<int:user_id>', UserFormalOffers.as_view()),
+        path('formaloffer/confirmate-sign', send_confirmation_formal_offer_email)
     ]
 
 
