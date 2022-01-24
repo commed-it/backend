@@ -53,7 +53,7 @@ class FormalOfferSerializer(serializers.ModelSerializer):
     pdf = Base64Pdf()
     class Meta:
         model = FormalOffer
-        fields = '__all__'
+        fields = ('encounterId', 'contract', 'pdf', 'state')
 
     def create(self, validated_data):
         try:
@@ -67,6 +67,8 @@ class FormalOfferSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.pk = None
         instance.version += 1
+        if validated_data['version']:
+            del validated_data['version']
         for k, v in validated_data.items():
             instance.__setattr__(k, v)
         instance.save()

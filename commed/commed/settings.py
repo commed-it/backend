@@ -200,14 +200,11 @@ LOGOUT_REDIRECT_URL = "home"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 SITE_ID = 1
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 ACCOUNT_EMAIL_VERIFICATION = os.getenv("EMAIL_OPTION")
-
 if os.getenv("EMAIL_OPTION"):
     EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
     EMAIL_HOST = os.getenv("EMAIL_HOST")
