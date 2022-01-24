@@ -70,7 +70,7 @@ class FormalOfferSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.pk = None
         instance.version += 1
-        if validated_data['version']:
+        if 'version' in validated_data.keys():
             del validated_data['version']
         for k, v in validated_data.items():
             instance.__setattr__(k, v)
