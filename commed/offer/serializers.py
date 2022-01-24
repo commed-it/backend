@@ -69,6 +69,9 @@ class FormalOfferSerializer(serializers.ModelSerializer):
         else:
             validated_data['version'] = 0
         fo = FormalOffer.objects.create(**validated_data)
+        ser = FormalOfferSerializer(fo)
+        data = ser.data
+        data['encounterId'] = str(ser.data['encounterId'])
         user = fo.encounterId.product.owner
         channel_layer = get_channel_layer()
         message = {
@@ -76,16 +79,17 @@ class FormalOfferSerializer(serializers.ModelSerializer):
                 'message': {
                     "user": user.id, 
                     "type": "formalOffer", 
-                    "formalOffer": fo
+                    "formalOffer": data
                     }
                 
-            } 
+            }
+        group_name = f"chat_{fo.encounterId.id}"
         async_to_sync(channel_layer.group_send)(
-            f"chat_{fo.encounterId}",
+            group_name,
             message
         )
-        new_msg = Message.objects.create(author=user.id,
-                                         msg=json.dumps(message), channel_context=fo.encounterId)
+        new_msg = Message.objects.create(author=user,
+                                         msg=json.dumps(message['message']), channel_context=fo.encounterId)
         new_msg.save()
         return fo
 
@@ -98,8 +102,31 @@ class FormalOfferSerializer(serializers.ModelSerializer):
         for k, v in validated_data.items():
             instance.__setattr__(k, v)
         instance.save()
-        return instance
-
+        fo = instance
+        ser = FormalOfferSerializer(fo)
+        data = ser.data
+        data['encounterId'] = str(ser.data['encounterId'])
+        user = fo.encounterId.product.owner
+        channel_layer = get_channel_layer()
+        message = {
+                'type': 'chat_message',
+                'message': {
+                    "user": user.id, 
+                    "type": "formalOffer", 
+                    "formalOffer": data
+                    }
+                
+            }
+        group_name = f"chat_{fo.encounterId.id}"
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            message
+        )
+        new_msg = Message.objects.create(author=user,
+                                         msg=json.dumps(message['message']), channel_context=fo.encounterId)
+        new_msg.save()
+        return fo
+        
 
 class ListChatSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
