@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from django.core.mail import send_mail
+from rest_framework.decorators import api_view
 
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
     TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull
@@ -207,6 +208,7 @@ class UserEncounter(APIView):
         return Response(serializer.data)
 
 
+@api_view(['POST'])
 def send_confirmation_formal_offer_email(request, *args, **kwargs):
     """
     Sends an email with a confirmation for the formal offer.
@@ -215,12 +217,20 @@ def send_confirmation_formal_offer_email(request, *args, **kwargs):
         user: User = request.user
         email = user.email
         send_mail(
-            '[ Commed ]: Confirmation of signing a formal offer',
-            """<h1>This should contain a longer description</h1>
-            <p>This should be changed to have a button</p>
-            """,
-            os.getenv('EMAIL_HOST_USER'),
-            email
+            subject = '[ Commed ]: Confirmation of signing a formal offer',
+            message = "",
+            from_email = os.getenv('EMAIL_HOST_USER'),
+            recipient_list = [email],
+            html_message = """
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>This should contain a longer description</h1>
+                    <p>This should be changed to have a button</p>
+                <body>
+            </html>
+            """
         )
         return JsonResponse({'message': 'Email sent correctly'}, status=204)
     else:
