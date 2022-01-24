@@ -11,9 +11,9 @@ def get_nlp():
     if DEBUG:
         print('imported spacy')
     try:
-        spacy.load("en_core_web_md")
-    except:
         return spacy.load("commed/en_core_web_md")
+    except OSError:
+        spacy.load("en_core_web_md")
 
 
 def category_similarity(tag_name):
