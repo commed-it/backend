@@ -10,7 +10,10 @@ def get_nlp():
     import spacy
     if DEBUG:
         print('imported spacy')
-    return spacy.load("en_core_web_lg")
+    try:
+        return spacy.load("commed/en_core_web_md")
+    except OSError:
+        return spacy.load("en_core_web_md")
 
 
 def category_similarity(tag_name):
