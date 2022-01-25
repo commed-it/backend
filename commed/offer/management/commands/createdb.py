@@ -18,7 +18,7 @@ class Command(BaseCommand):
             id=1,
             username="user1",
             password="complexpass",
-            email="user1@gmail.com",
+            email="commed.noreply@gmail.com",
             first_name="John",
             last_name="Doe",
         )
@@ -26,7 +26,7 @@ class Command(BaseCommand):
             id=2,
             username="user2",
             password="complexpass",
-            email="user2@gmail.com",
+            email="commed.noreply@gmail.com",
             first_name="Jane",
             last_name="Joe",
         )
@@ -34,7 +34,7 @@ class Command(BaseCommand):
             id=3,
             username="user3",
             password="complexpass",
-            email="user3@gmail.com",
+            email="commed.noreply@gmail.com",
             first_name="Jamie",
             last_name="Oliver",
         )
@@ -42,7 +42,7 @@ class Command(BaseCommand):
             id=4,
             username="user4",
             password="complexpass",
-            email="user4@gmail.com",
+            email="commed.noreply@gmail.com",
             first_name="Blues",
             last_name="Crews",
         )
