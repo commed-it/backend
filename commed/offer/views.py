@@ -215,6 +215,7 @@ class StartSignatureView(APIView):
         Sends an email with a confirmation for the formal offer.
         """
         user: User = self.request.user
+        origin = self.request.headers['Origin']
         formaloffer : FormalOffer = FormalOffer.objects.get(pk=request.data["fo"])
         enterprise: Enterprise = Enterprise.objects.get(owner = formaloffer.encounterId.product.owner) 
         email = user.email
@@ -223,7 +224,7 @@ class StartSignatureView(APIView):
                 "img" : ALLOWED_HOSTS[3] + port + enterprise.profileImage.url,
                 "enterprise": enterprise.name,
                 "product": formaloffer.encounterId.product.title,
-                "sign": ALLOWED_HOSTS[3] + port + "/confirm-signature/" + str(request.data["fo"]),
+                "sign": origin + "/signature/" + str(request.data["fo"]),
                 "email": formaloffer.encounterId.product.owner.email,
             }
         message = render_to_string('sign.html', context)
