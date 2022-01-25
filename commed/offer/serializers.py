@@ -1,12 +1,16 @@
+import json
+from django.forms import IntegerField
 from rest_framework import serializers
 import base64, uuid
 from django.core.files.base import ContentFile
+from chat.models import Message
 from enterprise.serializers import EnterpriseSerializer
 from product.serializers import ProductSerializer
 from .models import Encounter, FormalOffer
 from enterprise.serializers import EnterpriseSerializer
 from product.serializers import ProductSerializer
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class Base64Pdf(serializers.FileField):
 
@@ -62,10 +66,33 @@ class FormalOfferSerializer(serializers.ModelSerializer):
         last_fo = FormalOffer.objects.filter(encounterId=validated_data["encounterId"]).last()
         if last_fo: 
             validated_data['version'] = last_fo.version + 1
-            return FormalOffer.objects.create(**validated_data)
         else:
             validated_data['version'] = 0
-            return FormalOffer.objects.create(**validated_data)
+        fo = FormalOffer.objects.create(**validated_data)
+        ser = FormalOfferSerializer(fo)
+        data = ser.data
+        data['encounterId'] = str(ser.data['encounterId'])
+        user = fo.encounterId.product.owner
+        channel_layer = get_channel_layer()
+        message = {
+                'type': 'chat_message',
+                'message': {
+                    "user": user.id, 
+                    "type": "formalOffer", 
+                    "formalOffer": data
+                    }
+                
+            }
+        group_name = f"chat_{fo.encounterId.id}"
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            message
+        )
+        new_msg = Message.objects.create(author=user,
+                                         msg=json.dumps(message['message']), channel_context=fo.encounterId)
+        new_msg.save()
+        return fo
+
 
     def update(self, instance, validated_data):
         instance.pk = None
@@ -75,8 +102,31 @@ class FormalOfferSerializer(serializers.ModelSerializer):
         for k, v in validated_data.items():
             instance.__setattr__(k, v)
         instance.save()
-        return instance
-
+        fo = instance
+        ser = FormalOfferSerializer(fo)
+        data = ser.data
+        data['encounterId'] = str(ser.data['encounterId'])
+        user = fo.encounterId.product.owner
+        channel_layer = get_channel_layer()
+        message = {
+                'type': 'chat_message',
+                'message': {
+                    "user": user.id, 
+                    "type": "formalOffer", 
+                    "formalOffer": data
+                    }
+                
+            }
+        group_name = f"chat_{fo.encounterId.id}"
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            message
+        )
+        new_msg = Message.objects.create(author=user,
+                                         msg=json.dumps(message['message']), channel_context=fo.encounterId)
+        new_msg.save()
+        return fo
+        
 
 class ListChatSerializer(serializers.Serializer):
     encounter = EncounterSerializer()
@@ -97,3 +147,6 @@ class FormalOfferEncounterSerializerFull(serializers.Serializer):
     product = ProductSerializer()
     client = EnterpriseSerializer()
     owner = EnterpriseSerializer()
+
+class SignSerializer(serializers.Serializer):
+    fo = IntegerField()

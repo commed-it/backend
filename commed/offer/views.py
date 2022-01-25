@@ -5,10 +5,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from django.core.mail import send_mail
-from rest_framework.decorators import api_view
-
+from django.template.loader import render_to_string
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
-    TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull
+    TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull, SignSerializer
 from rest_framework import viewsets, generics
 from .models import FormalOffer
 from rest_framework.permissions import AllowAny
@@ -18,7 +17,7 @@ from rest_framework.response import Response
 from product.models import Product
 import dataclasses as dto
 from enterprise.models import Enterprise
-
+from commed.settings import ALLOWED_HOSTS
 
 class EncounterViewSet(viewsets.ModelViewSet):
     """
@@ -208,31 +207,38 @@ class UserEncounter(APIView):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
-def send_confirmation_formal_offer_email(request, *args, **kwargs):
-    """
-    Sends an email with a confirmation for the formal offer.
-    """
-    if request.method == 'POST':
-        user: User = request.user
+class StartSignatureView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Sends an email with a confirmation for the formal offer.
+        """
+        user: User = self.request.user
+        formaloffer : FormalOffer = FormalOffer.objects.get(pk=request.data["fo"])
+        enterprise: Enterprise = Enterprise.objects.get(owner = formaloffer.encounterId.product.owner) 
         email = user.email
+        port = ':443' if os.getenv("PORT")  else (':' + os.getenv("OPEN_PORT"))
+        context = {
+                "img" : ALLOWED_HOSTS[3] + port + enterprise.profileImage.url,
+                "enterprise": enterprise.name,
+                "product": formaloffer.encounterId.product.title,
+                "sign": ALLOWED_HOSTS[3] + port + "/confirm-signature/" + str(request.data["fo"]),
+                "email": formaloffer.encounterId.product.owner.email,
+            }
+        message = render_to_string('sign.html', context)
         send_mail(
-            subject = '[ Commed ]: Confirmation of signing a formal offer',
+            subject = '[ Commed ]: Formal Offer Signature - '+ enterprise.name+' - '+ formaloffer.encounterId.product.title,
             message = "",
             from_email = os.getenv('EMAIL_HOST_USER'),
             recipient_list = [email],
-            html_message = """
-            <html>
-                <head>
-                </head>
-                <body>
-                    <h1>This should contain a longer description</h1>
-                    <p>This should be changed to have a button</p>
-                <body>
-            </html>
-            """
+            html_message = message
         )
         return JsonResponse({'message': 'Email sent correctly'}, status=204)
-    else:
-        return JsonResponse({'message': 'method not allowed'}, status=405)
 
+class ConfirmSignatureView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        fo = request.path.split('/')[-1]
+        formal_offer = FormalOffer.objects.get
