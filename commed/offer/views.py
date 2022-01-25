@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from django.core.mail import send_mail
-
+from django.template.loader import render_to_string
 from .serializers import EncounterSerializer, FormalOfferSerializer, FormalOfferEncounterSerializer, ListChatSerializer, \
     TheOtherEncounterSerializer, CreateIfNotExistsSerializer, FormalOfferEncounterSerializerFull, SignSerializer
 from rest_framework import viewsets, generics
@@ -209,32 +209,30 @@ class UserEncounter(APIView):
 
 class StartSignatureView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = SignSerializer
-
 
     def post(self, request, *args, **kwargs):
         """
         Sends an email with a confirmation for the formal offer.
         """
-        request = self.serializer_class(data=request.data)
         user: User = self.request.user
+        formaloffer : FormalOffer = FormalOffer.objects.get(pk=request.data["fo"])
+        enterprise: Enterprise = Enterprise.objects.get(owner = formaloffer.encounterId.product.owner) 
         email = user.email
         port = ':443' if os.getenv("PORT")  else (':' + os.getenv("OPEN_PORT"))
+        context = {
+                "img" : ALLOWED_HOSTS[3] + port + enterprise.profileImage.url,
+                "enterprise": enterprise.name,
+                "product": formaloffer.encounterId.product.title,
+                "sign": ALLOWED_HOSTS[3] + port + "/confirm-signature/" + str(request.data["fo"]),
+                "email": formaloffer.encounterId.product.owner.email,
+            }
+        message = render_to_string('sign.html', context)
         send_mail(
-            subject = '[ Commed ]: Confirmation of signing a formal offer',
+            subject = '[ Commed ]: Formal Offer Signature - '+ enterprise.name+' - '+ formaloffer.encounterId.product.title,
             message = "",
             from_email = os.getenv('EMAIL_HOST_USER'),
             recipient_list = [email],
-            html_message = f"""
-            <html>
-                <head>
-                </head>
-                <body>
-                    <h1>Click the link Below to sign</h1>
-                    <p> {ALLOWED_HOSTS[3]}{port}/confirm-signature/{request.fo} </p>
-                <body>
-            </html>
-            """
+            html_message = message
         )
         return JsonResponse({'message': 'Email sent correctly'}, status=204)
 
