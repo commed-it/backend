@@ -65,7 +65,7 @@ class Command(BaseCommand):
         )
         product3 = Product.objects.create(
             owner=user_3,
-            title="Fruita",
+            title="Macedònia",
             description="Fruites i verdures orgàniques i tradicional. Venem a l'engrós, en pacs, o en caixes de fruita i"
                         "vegetals de diferents pesos en composicions pensades per una setmana.",
             latitude=0.0,
@@ -279,3 +279,76 @@ class Command(BaseCommand):
             bannerImage="applianceBanner.jpg",
             location="4455 Landing Lange, APT 4, Nashville, TN 37011-5678"
         )
+
+        participant = User.objects.create_user(
+            id=5,
+            username="user5",
+            password="complexpass",
+            email="commed.usuari.prova@gmail.com",
+            first_name="Anna",
+            last_name="Riart",
+        )
+        Enterprise.objects.create(
+            owner=participant,
+            NIF="2643671X",
+            name="Restaurant l'Alpaca",
+            contactInfo="alpaca@gmail.com",
+            description="Restaurant l'Alpaca. També fem càterings per a esdeveniments.",
+            profileImage="alpaca.png",
+            bannerImage="alpacaBanner.jpg",
+            location="Av. Pau Casals nº 8 de Cervera"
+        )
+
+        encounter = Encounter.objects.create(
+            client=participant,
+            product=product1
+        )
+
+        msg1 = Message.objects.create(
+            author=participant,
+            msg=json.dumps({'user': 5, 'type': 'message',
+                            'message': "Hola, bon dia. M'agradaria contactar amb els seus serveis de seguretat per poder organitzar una festa privada."}),
+            channel_context=encounter
+        )
+
+        msg2 = Message.objects.create(
+            author=user_1,
+            msg=json.dumps({'user': 1, 'type': 'message',
+                            'message': "Hola, bon dia. Estem encantats que es posi en contacte amb nosaltres. Nosaltres som una agència de seguretat" +
+                                       " que disposa de diferents serveis per a diferents tipus d'esdeveniments. Tenim a disposició plantilla per a serveis " +
+                                       " de festes de llarga durada i de gran extensió com festes en petit comitè en el qual es necessiti el nostre servei per deixar entrar els convidats, etc."}),
+            channel_context=encounter
+        )
+        msg3 = Message.objects.create(
+            author=user_1,
+            msg=json.dumps({'user': 1, 'type': 'message',
+                            'message': "Tot seria concretar quin tipus d'esdeveniment es proposa i quin dia voldria els nostres serveis, ja que el preu pot variar depenent d'aquests factors."}),
+            channel_context=encounter
+        )
+        msg4 = Message.objects.create(
+            author=participant,
+            msg=json.dumps({'user': 5, 'type': 'message',
+                            'message': "Perfecte! Moltes gràcies."}),
+            channel_context=encounter
+        )
+        msg5 = Message.objects.create(
+            author=participant,
+            msg=json.dumps({'user': 5, 'type': 'message',
+                            'message': "Doncs mira, seria una festa a Pedralbes d'unes 20 persones la nit del 23 de Juny. No és d'etiqueta, però ens agradaria que no entrés ningú que no estigués convidat."}),
+            channel_context=encounter
+        )
+        msg3 = Message.objects.create(
+            author=user_1,
+            msg=json.dumps({'user': 1, 'type': 'message',
+                            'message': "Perfecte. Et passo contracte."}),
+            channel_context=encounter
+        )
+        file_mock = MagicMock(spec=File)
+        file_mock.name = 'Contracte.pdf'
+        FormalOffer.objects.create(
+            encounterId=encounter,
+            version=1,
+            contract="Contracte",
+            pdf=file_mock
+        )
+
