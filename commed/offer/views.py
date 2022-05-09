@@ -19,6 +19,9 @@ import dataclasses as dto
 from enterprise.models import Enterprise
 from commed.settings import ALLOWED_HOSTS
 
+SIGN_TEMPLATE = 'sign-catalan.html'
+
+
 class EncounterViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for interacting with Enterprises
@@ -227,7 +230,7 @@ class StartSignatureView(APIView):
                 "sign": origin + "/signature/" + str(request.data["fo"]),
                 "email": formaloffer.encounterId.product.owner.email,
             }
-        message = render_to_string('sign.html', context)
+        message = render_to_string(SIGN_TEMPLATE, context)
         send_mail(
             subject = '[ Commed ]: Formal Offer Signature - '+ enterprise.name+' - '+ formaloffer.encounterId.product.title,
             message = "",
