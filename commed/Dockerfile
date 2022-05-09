@@ -11,7 +11,7 @@ WORKDIR /app
 
 RUN pip install spacy==3.1.3
 
-RUN python -m spacy download en_core_web_lg
+RUN python -m spacy download ca_core_news_lg
 
 COPY requirements.txt /app/
 
